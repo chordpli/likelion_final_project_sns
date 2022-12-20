@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.likelion.finalproject.domain.UserRole.USER;
+import static com.likelion.finalproject.domain.enums.UserRole.USER;
 
 @AllArgsConstructor
 @NoArgsConstructor

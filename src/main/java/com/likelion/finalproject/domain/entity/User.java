@@ -1,6 +1,6 @@
 package com.likelion.finalproject.domain.entity;
 
-import com.likelion.finalproject.domain.UserRole;
+import com.likelion.finalproject.domain.enums.UserRole;
 import lombok.*;
 
 import javax.persistence.*;
