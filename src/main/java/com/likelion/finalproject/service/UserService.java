@@ -3,6 +3,8 @@ package com.likelion.finalproject.service;
 import com.likelion.finalproject.domain.dto.UserDto;
 import com.likelion.finalproject.domain.dto.UserJoinRequest;
 import com.likelion.finalproject.domain.entity.User;
+import com.likelion.finalproject.exception.ErrorCode;
+import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +19,7 @@ public class UserService {
     public UserDto join(UserJoinRequest dto) {
         userRepository.findByUserName(dto.getUserName())
                 .ifPresent(user->{
-                    new RuntimeException();
+                    throw new SNSAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("중복된 userName: %s ", dto.getUserName()));
                 });
 
         User savedUser = userRepository.save(dto.toEntity(encoder.encode(dto.getPassword())));
