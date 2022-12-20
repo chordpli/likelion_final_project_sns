@@ -1,2 +1,18 @@
 server:
   port: 8088
+  servlet:
+    encoding:
+      force-response: true
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: localhost:3306/
+    username: root
+    password: 1234
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret: secretKey
