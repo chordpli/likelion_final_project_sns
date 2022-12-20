@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/index")
+@RequestMapping("/api/v1/")
 @RestController
-public class IndexController {
+public class HelloController {
 
-    @GetMapping
+    @GetMapping("/hello")
     public ResponseEntity<String> index(){
-        return ResponseEntity.ok().body("Index");
+        return ResponseEntity.ok().body("hello");
     }
 }
