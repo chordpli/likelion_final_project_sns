@@ -27,13 +27,12 @@ public class SwaggerConfig {
     }
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Swagger 추가")
-                .description("Swagger를 추가하였습니다.")
+                .title("MutsaSNS API DOCS")
+                .description("MutsaSNS API 문서")
                 .version("1.0.0")
                 .termsOfServiceUrl("")
                 .license("")
                 .licenseUrl("")
-                .build()
-                ;
+                .build();
     }
 }
