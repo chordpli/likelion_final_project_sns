@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login").permitAll()
+                .antMatchers("/api/v1/users/join", "/api/v1/users/login","/swagger-ui").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/**").authenticated() // /api/v1/** 으로 넘어오는 post 요청들에 대해 인증요청. 순서대로 넘어오기 때문에 위에서 막히면 다 막혀버림. 순서 잘 고려해서 작성.
                 .and()
                 .sessionManagement()
