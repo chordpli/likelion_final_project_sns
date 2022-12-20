@@ -10,3 +10,27 @@
 | posts |  POST  | /api/v1/posts/      |  포스트 등록   |  [ ]  |
 | posts |  PUT   | /api/v1/posts/{id}  |  포스트 수정   |  [ ]  |
 | posts | DELETE | /api/v1/posts/{id}  |  포스트 삭제   |  [ ]  |
+
+
+## 구현 과정
+### [POST] join
+### [POST] login
+### [GET] posts
+### [GET] posts/{postsId}
+### [POST] login
+### [PUT] posts
+### [DELETE] posts
+
+## Config
+### Swagger
+### Spring Security
+#### Encrypt Config
+### JWT(Json Web Token)
+### Auditing
+
+## ETC
+### Response
+### Global Exception
+
+## 회고
+### 리팩토링
