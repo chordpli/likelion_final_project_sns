@@ -19,7 +19,7 @@ public class UserService {
     public UserDto join(UserJoinRequest dto) {
         userRepository.findByUserName(dto.getUserName())
                 .ifPresent(user->{
-                    throw new SNSAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("중복된 userName: %s ", dto.getUserName()));
+                    throw new SNSAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName = %s", dto.getUserName()));
                 });
 
         User savedUser = userRepository.save(dto.toEntity(encoder.encode(dto.getPassword())));
