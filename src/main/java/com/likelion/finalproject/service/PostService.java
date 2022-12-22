@@ -1,5 +1,6 @@
 package com.likelion.finalproject.service;
 
+import com.likelion.finalproject.domain.dto.PostReadResponse;
 import com.likelion.finalproject.domain.dto.PostRequest;
 import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.domain.entity.Post;
@@ -33,5 +34,21 @@ public class PostService {
         postRepository.save(post);
 
         return new PostResponse("포스트 등록 완료", post.getId());
+    }
+
+    public PostReadResponse getPost(Integer postId) {
+        Post readPost = postRepository.findById(postId)
+                .orElseThrow(
+                        () -> new SNSAppException(ErrorCode.POST_NOT_FOUND, "해당 페이지가 없습니다.")
+                );
+
+        return PostReadResponse.builder()
+                .id(readPost.getId())
+                .title(readPost.getTitle())
+                .body(readPost.getBody())
+                .userName(readPost.getUser().getUserName())
+                .createdAt(readPost.getCreatedAt())
+                .lastModifiedAt(readPost.getLastModifiedAt())
+                .build();
     }
 }
