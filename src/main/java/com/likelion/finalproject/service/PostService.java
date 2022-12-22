@@ -10,7 +10,12 @@ import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.PostRepository;
 import com.likelion.finalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +55,14 @@ public class PostService {
                 .createdAt(readPost.getCreatedAt())
                 .lastModifiedAt(readPost.getLastModifiedAt())
                 .build();
+    }
+
+    public List<PostReadResponse> getAllPost(PageRequest pageRequest) {
+        Page<Post> posts = postRepository.findAll(pageRequest);
+        System.out.println(posts.getPageable());
+        List<PostReadResponse> postReadResponses = posts.stream()
+                .map(Post::toResponse)
+                .collect(Collectors.toList());
+        return postReadResponses;
     }
 }

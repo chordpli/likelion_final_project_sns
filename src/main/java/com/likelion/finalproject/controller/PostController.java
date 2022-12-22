@@ -7,8 +7,14 @@ import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/v1/posts")
 @RestController
@@ -27,9 +33,16 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public Response<PostReadResponse> post(@PathVariable Integer postId){
+    public Response<PostReadResponse> getPost(@PathVariable Integer postId){
         log.info("postId = {}", postId);
         PostReadResponse post = postService.getPost(postId);
         return Response.success(post);
+    }
+
+    @GetMapping
+    public Response<Page<PostReadResponse>> getPostList(){
+        PageRequest pageable = PageRequest.of(0, 20, Sort.by("id").descending());
+        List<PostReadResponse> post = postService.getAllPost(pageable);
+        return Response.success(new PageImpl<>(post));
     }
 }

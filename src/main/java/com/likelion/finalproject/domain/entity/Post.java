@@ -1,5 +1,6 @@
 package com.likelion.finalproject.domain.entity;
 
+import com.likelion.finalproject.domain.dto.PostReadResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,4 +26,15 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public PostReadResponse toResponse() {
+        return PostReadResponse.builder()
+                .id(this.getId())
+                .title(this.getTitle())
+                .body(this.getBody())
+                .userName(this.getUser().getUserName())
+                .createdAt(this.getCreatedAt())
+                .lastModifiedAt(this.getLastModifiedAt())
+                .build();
+    }
 }
