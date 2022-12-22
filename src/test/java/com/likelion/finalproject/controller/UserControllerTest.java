@@ -38,6 +38,7 @@ class UserControllerTest {
     @MockBean
     UserService userService;
 
+    /* 회원가입 */
     @Test
     @DisplayName("회원가입 성공")
     @WithMockUser
@@ -92,4 +93,25 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userDto)))
                 .andExpect(status().isConflict());
     }
+
+    /* 로그인 */
+    @Test
+    @DisplayName("로그인 성공")
+    void login_success(){
+
+    }
+
+    @Test
+    @DisplayName("로그인 실패_userName 없음")
+    void login_fail_empty_user_name(){
+
+    }
+
+    @Test
+    @DisplayName("로그인 성공_password_틀림")
+    void login_fail_wrong_password(){
+
+    }
+
+
 }
