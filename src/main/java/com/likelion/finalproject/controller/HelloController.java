@@ -13,4 +13,9 @@ public class HelloController {
     public ResponseEntity<String> index(){
         return ResponseEntity.ok().body("darkchocolate");
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.ok().body("test");
+    }
 }
