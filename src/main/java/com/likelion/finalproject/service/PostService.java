@@ -100,4 +100,25 @@ public class PostService {
         post.setBody(dto.getBody());
         post.setLastModifiedAt(LocalDateTime.now());
     }
+
+    public void deletePost(Integer postId, String userName) {
+        // user가 찾아지지 않는다면 삭제할 수 없다.
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(
+                        () -> new SNSAppException(USERNAME_NOT_FOUND, "일치하지 않은 회원 입니다.")
+                );
+
+        // post가 찾아지지 않는다면 삭제할 수 없다.
+        Post post = postRepository.findById(postId)
+                .orElseThrow(
+                        () -> new SNSAppException(POST_NOT_FOUND, "해당 포스트가 없습니다.")
+                );
+
+        // User가 관리자가 아닌데, User와 Post를 작성한 User가 다르면 삭제할 수 없다.
+        if (!user.getUserRole().equals(ADMIN) && !user.getId().equals(post.getUser().getId())) {
+            throw new SNSAppException(INVALID_PERMISSION, "사용자가 권한이 없습니다.");
+        }
+
+        postRepository.delete(post);
+    }
 }
