@@ -14,10 +14,11 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
 
 jwt:
   secret: secretKey
