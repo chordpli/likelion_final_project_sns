@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+
 import static javax.persistence.FetchType.LAZY;
 
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class Post extends BaseEntity {
     private String body;
     private String title;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -36,5 +38,18 @@ public class Post extends BaseEntity {
                 .createdAt(this.getCreatedAt())
                 .lastModifiedAt(this.getLastModifiedAt())
                 .build();
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt) {
+        super.setLastModifiedAt(lastModifiedAt);
     }
 }
