@@ -1,8 +1,8 @@
 package com.likelion.finalproject.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.likelion.finalproject.exception.ErrorCode;
+import com.likelion.finalproject.exception.SNSAppException;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -17,7 +17,6 @@ public class JwtUtil {
 
     // 만료를 확인하는 메서드
     public static boolean isExpired(String token, String secretKey) {
-        log.info("token = {}", token);
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().getExpiration().before(new Date());
     }
@@ -28,7 +27,8 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                //.setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                .setExpiration(new Date(System.currentTimeMillis()))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
