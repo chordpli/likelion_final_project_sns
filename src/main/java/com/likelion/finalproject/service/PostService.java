@@ -1,6 +1,5 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.Response;
 import com.likelion.finalproject.domain.dto.PostModifyRequest;
 import com.likelion.finalproject.domain.dto.PostReadResponse;
 import com.likelion.finalproject.domain.dto.PostRequest;
@@ -13,10 +12,7 @@ import com.likelion.finalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
