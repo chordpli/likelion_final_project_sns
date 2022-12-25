@@ -28,6 +28,10 @@ public class PostService {
     private final UserRepository userRepository;
 
     public PostResponse post(PostRequest dto, String userName) {
+        if (userName == null) {
+            throw new SNSAppException(NOT_EXIST_TOKEN, "토큰이 존재하지 않습니다.");
+        }
+
         // user가 찾아지지 않는다면 등록할 수 없다.
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(
@@ -70,6 +74,10 @@ public class PostService {
     }
 
     public Post modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
+        if (userName == null) {
+            throw new SNSAppException(NOT_EXIST_TOKEN, "토큰이 존재하지 않습니다.");
+        }
+
         // user가 찾아지지 않는다면 수정할 수 없다.
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(
@@ -98,6 +106,10 @@ public class PostService {
     }
 
     public void deletePost(Integer postId, String userName) {
+        if (userName == null) {
+            throw new SNSAppException(NOT_EXIST_TOKEN, "토큰이 존재하지 않습니다.");
+        }
+
         // user가 찾아지지 않는다면 삭제할 수 없다.
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(
