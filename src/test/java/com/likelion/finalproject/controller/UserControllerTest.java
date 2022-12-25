@@ -3,19 +3,24 @@ package com.likelion.finalproject.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.finalproject.domain.dto.UserDto;
 import com.likelion.finalproject.domain.dto.UserJoinRequest;
+import com.likelion.finalproject.domain.dto.UserLoginRequest;
+import com.likelion.finalproject.domain.dto.UserLoginResponse;
 import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.service.UserService;
+import com.likelion.finalproject.utils.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.likelion.finalproject.exception.ErrorCode.DUPLICATED_USER_NAME;
+import static com.likelion.finalproject.exception.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -38,10 +43,20 @@ class UserControllerTest {
     @MockBean
     UserService userService;
 
+    private String token;
+
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    @BeforeEach()
+    public void getToken() {
+        long expireTimeMs = 1000 * 60 * 60;
+        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+    }
+
     /* 회원가입 */
     @Test
     @DisplayName("회원가입 성공")
-    @WithMockUser
     void join_success() throws Exception {
         UserDto userDto = UserDto.builder()
                 .id(1)
@@ -74,8 +89,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입 실패")
-    @WithMockUser
+    @DisplayName("회원가입 실패 - userName 중복")
     void join_fail() throws Exception {
         UserDto userDto = UserDto.builder()
                 .id(1)
@@ -97,21 +111,79 @@ class UserControllerTest {
     /* 로그인 */
     @Test
     @DisplayName("로그인 성공")
-    void login_success(){
+    void login_success() throws Exception {
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .userName("jun")
+                .password("abcd")
+                .userRole(UserRole.USER)
+                .build();
 
+        UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), userDto.getPassword());
+        UserLoginResponse response = new UserLoginResponse(token);
+        given(userService.login(any())).willReturn(response);
+
+        String url = "/api/v1/users/login";
+        mockMvc.perform(post(url).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(dto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").exists())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.jwt").exists())
+                .andExpect(jsonPath("$.result.jwt").value(token))
+                .andDo(print());
+        verify(userService, times(1)).login(any());
     }
 
     @Test
     @DisplayName("로그인 실패_userName 없음")
-    void login_fail_empty_user_name(){
+    void login_fail_empty_user_name() throws Exception {
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .userName("jun")
+                .password("abcd")
+                .userRole(UserRole.USER)
+                .build();
 
+        UserDto userDto2 = UserDto.builder()
+                .id(1)
+                .userName("jun")
+                .password("abcde")
+                .userRole(UserRole.USER)
+                .build();
+
+        UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), userDto.getPassword());
+
+        given(userService.login(any()))
+                .willThrow(new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage()));
+
+        String url = "/api/v1/users/login";
+        mockMvc.perform(post(url).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(dto)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("로그인 성공_password_틀림")
-    void login_fail_wrong_password(){
+    @DisplayName("로그인 실패_password 오류")
+    void login_fail_wrong_password() throws Exception {
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .userName("jun")
+                .password("abcd")
+                .userRole(UserRole.USER)
+                .build();
 
+        UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), userDto.getPassword());
+
+        given(userService.login(any()))
+                .willThrow(new SNSAppException(INVALID_PASSWORD, INVALID_PASSWORD.getMessage()));
+
+        String url = "/api/v1/users/login";
+        mockMvc.perform(post(url).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(dto)))
+                .andExpect(status().isUnauthorized());
     }
-
-
 }
