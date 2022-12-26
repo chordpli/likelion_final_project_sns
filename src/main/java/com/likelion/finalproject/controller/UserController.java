@@ -22,7 +22,7 @@ public class UserController {
         return Response.success(new UserJoinResponse(user.getId(), user.getUserName()));
     }
 
-    @PostMapping("/switchToAdmin/{userId}")
+    @PostMapping("/{userId}/role/change")
     public Response<UserSwithResponse> switchToAdmin(@PathVariable Integer userId){
         log.info("toAdmin userId ={}", userId);
         UserSwithResponse user = userService.toAdmin(userId);
