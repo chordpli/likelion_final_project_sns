@@ -23,4 +23,8 @@ public class User extends BaseEntity {
     private UserRole userRole;
     @Column(name = "USER_NAME")
     private String userName;
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 }

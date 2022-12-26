@@ -1,21 +1,23 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.dto.UserDto;
-import com.likelion.finalproject.domain.dto.UserJoinRequest;
-import com.likelion.finalproject.domain.dto.UserLoginRequest;
-import com.likelion.finalproject.domain.dto.UserLoginResponse;
+import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.domain.entity.User;
+import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.UserRepository;
 import com.likelion.finalproject.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
@@ -56,5 +58,20 @@ public class UserService {
         return UserLoginResponse.builder()
                 .jwt(JwtUtil.createJwt(dto.getUserName(), secretKey, expireTimeMs))
                 .build();
+    }
+
+    public UserSwithResponse toAdmin(Integer userId) {
+        log.info("service toAdmin userId ={}", userId);
+        // 해당 유저가 있는지 확인
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new SNSAppException(ErrorCode.USERNAME_NOT_FOUND, "해당 유저가 존재하지 않습니다.")
+        );
+        log.info("service toAdmin userRole ={}", user.getUserRole());
+        user.setUserRole(UserRole.ADMIN);
+        user.setLastModifiedAt(LocalDateTime.now());
+        log.info("service toAdmin change userRole ={}", user.getUserRole());
+        userRepository.save(user);
+
+        return new UserSwithResponse(user.getUserName(), user.getUserRole());
     }
 }

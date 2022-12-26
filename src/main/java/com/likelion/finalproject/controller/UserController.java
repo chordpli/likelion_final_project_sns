@@ -4,15 +4,14 @@ import com.likelion.finalproject.domain.Response;
 import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/users")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -21,6 +20,14 @@ public class UserController {
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest dto){
         UserDto user = userService.join(dto);
         return Response.success(new UserJoinResponse(user.getId(), user.getUserName()));
+    }
+
+    @PostMapping("/switchToAdmin/{userId}")
+    public Response<UserSwithResponse> switchToAdmin(@PathVariable Integer userId){
+        log.info("toAdmin userId ={}", userId);
+        UserSwithResponse user = userService.toAdmin(userId);
+        log.info("toAdmin user ={}", user.getUserRole());
+        return Response.success(user);
     }
 
     @PostMapping("/login")
