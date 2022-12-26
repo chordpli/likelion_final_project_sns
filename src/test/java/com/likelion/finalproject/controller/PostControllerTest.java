@@ -6,6 +6,7 @@ import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.SNSAppException;
+import com.likelion.finalproject.fixture.PostFixture;
 import com.likelion.finalproject.fixture.UserFixture;
 import com.likelion.finalproject.service.PostService;
 import com.likelion.finalproject.service.UserService;
@@ -69,23 +70,8 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 상세 보기")
     void post_one_detail() throws Exception {
-        User user = User.builder()
-                .id(1)
-                .userName("chordpli")
-                .password("1234")
-                .userRole(UserRole.USER)
-                .build();
-
-        PostDto dto = PostDto.builder()
-                .id(1)
-                .title("제목")
-                .body("내용")
-                .user(user)
-                .build();
-
-        int postId = 1;
-
-
+        Post dto = PostFixture.get();
+        int postId = dto.getId();
         PostReadResponse response = PostReadResponse.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
@@ -109,9 +95,9 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.result.id").exists())
                 .andExpect(jsonPath("$.result.id").value(1))
                 .andExpect(jsonPath("$.result.title").exists())
-                .andExpect(jsonPath("$.result.title").value("제목"))
+                .andExpect(jsonPath("$.result.title").value("title"))
                 .andExpect(jsonPath("$.result.body").exists())
-                .andExpect(jsonPath("$.result.body").value("내용"))
+                .andExpect(jsonPath("$.result.body").value("body"))
                 .andExpect(jsonPath("$.result.userName").exists())
                 .andExpect(jsonPath("$.result.userName").value("chordpli"))
                 .andExpect(jsonPath("$.result.createdAt").exists())
@@ -125,7 +111,7 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 작성 성공")
     void post_success() throws Exception {
-        User user = UserFixture.get("chordpli", "1234");
+        UserLoginResponse user = new UserLoginResponse(token);
 
         PostRequest dto = new PostRequest("title", "content");
         PostResponse response = new PostResponse("포스트 등록 완료.", 1);
@@ -135,7 +121,7 @@ class PostControllerTest {
         String url = "/api/v1/posts";
 
         mockMvc.perform(post(url).with(csrf())
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getJwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(dto)))
                 .andExpect(status().isOk())
@@ -172,7 +158,7 @@ class PostControllerTest {
     void post_fail_invalid_token() throws Exception {
         User user = UserFixture.get("chordpli", "1234");
         PostRequest dto = new PostRequest("title", "content");
-        String token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
+        token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
         given(postService.post(any(), any())).willThrow(new SNSAppException(INVALID_TOKEN, "유효하지 않은 토큰입니다."));
 
         String url = "/api/v1/posts";
@@ -192,16 +178,16 @@ class PostControllerTest {
     void fail_post_modify_authentication_failed() throws Exception {
         User user = UserFixture.get("chordpli", "1234");
         token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
-        PostModifyRequest dto = new PostModifyRequest("title", "content");
+        PostModifyRequest request = new PostModifyRequest("title", "content");
         given(postService.modifyPost(any(), any(), any())).willThrow(new SNSAppException(INVALID_PERMISSION, "유효하지 않은 토큰입니다."));
 
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);
 
         mockMvc.perform(put(url).with(csrf())
-                        .header(HttpHeaders.AUTHORIZATION, token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(dto)))
+                        .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
         verify(postService, times(1)).modifyPost(any(), any(), any());
@@ -246,24 +232,13 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 수정 성공")
     void success_post_modify() throws Exception {
-        User user = User.builder()
-                .id(1)
-                .userName("chordpli")
-                .password("1234")
-                .userRole(UserRole.USER)
-                .build();
+        User user = UserFixture.get("chordpli", "1234");
+        Post post = PostFixture.get(user);
 
-        Post post = Post.builder()
-                .id(1)
-                .title("제목")
-                .body("내용")
-                .user(user)
-                .build();
+        PostModifyRequest request = new PostModifyRequest("title", "content");
 
-        PostModifyRequest dto = new PostModifyRequest("title", "content");
-
-        post.setTitle(dto.getTitle());
-        post.setBody(dto.getBody());
+        post.setTitle(request.getTitle());
+        post.setBody(request.getBody());
 
         given(postService.modifyPost(any(), any(), any())).willReturn(post);
 
@@ -273,7 +248,7 @@ class PostControllerTest {
         mockMvc.perform(put(url).with(csrf())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(dto)))
+                        .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").exists())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
@@ -282,6 +257,9 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.result.message").exists())
                 .andExpect(jsonPath("$.result.message").value("포스트 수정 완료"))
                 .andDo(print());
+
+        Assertions.assertEquals(post.getTitle(), request.getTitle());
+        Assertions.assertEquals(post.getBody(), request.getBody());
     }
 
 
@@ -297,7 +275,7 @@ class PostControllerTest {
         String url = String.format("/api/v1/posts/%d", postId);
 
         mockMvc.perform(delete(url).with(csrf())
-                        .header(HttpHeaders.AUTHORIZATION, token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(1)))
                 .andExpect(status().isUnauthorized())
@@ -344,7 +322,6 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 삭제 성공")
     void success_post_delete() throws Exception {
-        postService = mock(PostService.class);
         doNothing().when(postService).deletePost(any(), any());
 
         Integer postId = 1;
