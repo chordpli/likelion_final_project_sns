@@ -65,17 +65,15 @@ class UserControllerTest {
                 .userRole(UserRole.USER)
                 .build();
 
-        UserJoinRequest dto = new UserJoinRequest("jun", "abcd");
+        UserJoinRequest request = new UserJoinRequest("jun", "abcd");
 
         given(userService.join(any()))
                 .willReturn(userDto);
 
-        int id = 1;
-
         String url = "/api/v1/users/join";
         mockMvc.perform(post(url).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userDto)))
+                        .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").exists())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
@@ -91,12 +89,7 @@ class UserControllerTest {
     @Test
     @DisplayName("회원가입 실패 - userName 중복")
     void join_fail() throws Exception {
-        UserDto userDto = UserDto.builder()
-                .id(1)
-                .userName("jun")
-                .password("abcd")
-                .userRole(UserRole.USER)
-                .build();
+        UserJoinRequest request = new UserJoinRequest("jun", "abcd");
 
         given(userService.join(any()))
                 .willThrow(new SNSAppException(DUPLICATED_USER_NAME, DUPLICATED_USER_NAME.getMessage()));
@@ -104,8 +97,9 @@ class UserControllerTest {
         String url = "/api/v1/users/join";
         mockMvc.perform(post(url).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userDto)))
-                .andExpect(status().isConflict());
+                        .content(objectMapper.writeValueAsBytes(request)))
+                .andExpect(status().isConflict())
+                .andDo(print());
     }
 
     /* 로그인 */
