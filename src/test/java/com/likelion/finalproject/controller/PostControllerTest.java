@@ -6,6 +6,7 @@ import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.SNSAppException;
+import com.likelion.finalproject.fixture.UserFixture;
 import com.likelion.finalproject.service.PostService;
 import com.likelion.finalproject.service.UserService;
 import com.likelion.finalproject.utils.JwtUtil;
@@ -53,7 +54,6 @@ class PostControllerTest {
     PostService postService;
 
     private String token;
-
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -125,6 +125,8 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 작성 성공")
     void post_success() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+
         PostRequest dto = new PostRequest("title", "content");
         PostResponse response = new PostResponse("포스트 등록 완료.", 1);
 
@@ -152,7 +154,7 @@ class PostControllerTest {
     void post_fail_no_token() throws Exception {
         PostRequest dto = new PostRequest("title", "content");
 
-        given(postService.post(any(), any())).willThrow(new SNSAppException(NOT_EXIST_TOKEN, "토큰이 존재하지 않습니다."));
+        given(postService.post(any(), any())).willThrow(new SNSAppException(INVALID_PERMISSION, "토큰이 존재하지 않습니다."));
 
         String url = "/api/v1/posts";
 
@@ -168,8 +170,9 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 작성 실패")
     void post_fail_invalid_token() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
         PostRequest dto = new PostRequest("title", "content");
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis());
+        String token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
         given(postService.post(any(), any())).willThrow(new SNSAppException(INVALID_TOKEN, "유효하지 않은 토큰입니다."));
 
         String url = "/api/v1/posts";
@@ -187,9 +190,10 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 수정 실패_인증 실패")
     void fail_post_modify_authentication_failed() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+        token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
         PostModifyRequest dto = new PostModifyRequest("title", "content");
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis());
-        given(postService.modifyPost(any(), any(), any())).willThrow(new SNSAppException(INVALID_TOKEN, "유효하지 않은 토큰입니다."));
+        given(postService.modifyPost(any(), any(), any())).willThrow(new SNSAppException(INVALID_PERMISSION, "유효하지 않은 토큰입니다."));
 
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);
@@ -285,7 +289,8 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 삭제 실패_인증 실패")
     void fail_post_delete_authentication_failed() throws Exception {
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis());
+        User user = UserFixture.get("chordpli", "1234");
+        token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
         willThrow(new SNSAppException(INVALID_TOKEN, "유효하지 않은 토큰입니다.")).given(postService).deletePost(any(), any());
 
         Integer postId = 1;
@@ -321,6 +326,7 @@ class PostControllerTest {
     @Test
     @DisplayName("포스트 삭제 실패_DB 에러")
     void fail_post_delete_db_error() throws Exception {
+
         willThrow(new SNSAppException(DATABASE_ERROR, "데이터 베이스에 에러가 발생하였습니다.")).given(postService).deletePost(any(), any());
 
         Integer postId = 1;
