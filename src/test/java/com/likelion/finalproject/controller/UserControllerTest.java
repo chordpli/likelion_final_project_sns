@@ -146,14 +146,7 @@ class UserControllerTest {
                 .userRole(UserRole.USER)
                 .build();
 
-        UserDto userDto2 = UserDto.builder()
-                .id(1)
-                .userName("jun")
-                .password("abcde")
-                .userRole(UserRole.USER)
-                .build();
-
-        UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), userDto.getPassword());
+        UserLoginRequest dto = new UserLoginRequest("abc", "bbcd");
 
         given(userService.login(any()))
                 .willThrow(new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage()));
@@ -162,7 +155,8 @@ class UserControllerTest {
         mockMvc.perform(post(url).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(dto)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andDo(print());
     }
 
     @Test
@@ -175,7 +169,7 @@ class UserControllerTest {
                 .userRole(UserRole.USER)
                 .build();
 
-        UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), userDto.getPassword());
+        UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), "bbcd");
 
         given(userService.login(any()))
                 .willThrow(new SNSAppException(INVALID_PASSWORD, INVALID_PASSWORD.getMessage()));
@@ -184,6 +178,7 @@ class UserControllerTest {
         mockMvc.perform(post(url).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(dto)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
     }
 }
