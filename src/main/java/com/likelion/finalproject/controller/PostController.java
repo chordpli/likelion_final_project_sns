@@ -54,7 +54,7 @@ public class PostController {
                                                        Authentication authentication) {
         String userName = authentication.getName();
         Post post = postService.modifyPost(postId, dto, userName);
-        return Response.success(new PostResponse("포스트 수정 완료", post.getId()));
+        return Response.success(new PostResponse("포스트 수정 완료", postId));
     }
 
     @DeleteMapping("/{postId}")
