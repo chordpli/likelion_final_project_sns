@@ -60,18 +60,26 @@ public class UserService {
                 .build();
     }
 
-    public UserSwithResponse toAdmin(Integer userId) {
+    public UserSwithResponse toAdmin(Integer userId, String name) {
         log.info("service toAdmin userId ={}", userId);
         // 해당 유저가 있는지 확인
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new SNSAppException(ErrorCode.USERNAME_NOT_FOUND, "해당 유저가 존재하지 않습니다.")
         );
-        log.info("service toAdmin userRole ={}", user.getUserRole());
+
+        // 요청을 보낸 user가 관리자인지 확인
+        User admin = userRepository.findByUserName(name).orElseThrow(
+                () -> new SNSAppException(ErrorCode.USERNAME_NOT_FOUND, "요청을 보낸 유저가 존재하지 않습니다.")
+        );
+
+        // 해당 유저가 관리자인지 확인
+        if (!admin.getUserRole().equals(UserRole.ADMIN)) {
+            throw new SNSAppException(ErrorCode.INVALID_PERMISSION, "권한이 없습니다.");
+        }
+
         user.setUserRole(UserRole.ADMIN);
         user.setLastModifiedAt(LocalDateTime.now());
-        log.info("service toAdmin change userRole ={}", user.getUserRole());
         userRepository.save(user);
-
         return new UserSwithResponse(user.getUserName(), user.getUserRole());
     }
 }

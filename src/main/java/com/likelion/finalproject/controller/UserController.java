@@ -6,6 +6,7 @@ import com.likelion.finalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/users")
@@ -23,9 +24,9 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/role/change")
-    public Response<UserSwithResponse> switchToAdmin(@PathVariable Integer userId){
+    public Response<UserSwithResponse> switchToAdmin(@PathVariable Integer userId, Authentication authentication){
         log.info("toAdmin userId ={}", userId);
-        UserSwithResponse user = userService.toAdmin(userId);
+        UserSwithResponse user = userService.toAdmin(userId, authentication.getName());
         log.info("toAdmin user ={}", user.getUserRole());
         return Response.success(user);
     }
