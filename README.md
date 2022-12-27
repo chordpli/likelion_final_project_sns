@@ -20,6 +20,9 @@
 - ADMIN 회원은 일반 회원의 권한을 ADMIN으로 승격시킬 수 있습니다.
 - ADMIM 회원은 모든 사용자의글과 댓글에 수정, 삭제를 할 수 있습니다.
 
+## ERD
+![Alt text](file:///erd2.png)
+
 ## 구현 과정
 ### User Join & Login
 https://chordplaylist.tistory.com/209
