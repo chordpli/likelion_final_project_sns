@@ -28,7 +28,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("MutsaSNS API DOCS")
-                .description("MutsaSNS API 문서")
+                .description("MutsaSNS API 문서_Made by 김준호")
                 .version("1.0.0")
                 .termsOfServiceUrl("")
                 .license("")
