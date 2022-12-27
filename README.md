@@ -21,7 +21,7 @@
 - ADMIM 회원은 모든 사용자의글과 댓글에 수정, 삭제를 할 수 있습니다.
 
 ## ERD
-![Alt text](file:///erd2.png)
+![erd2](https://user-images.githubusercontent.com/101695482/209633615-ee1af6f9-716d-4cb5-8177-10f06a7e1546.png)
 
 ## 구현 과정
 ### User Join & Login
