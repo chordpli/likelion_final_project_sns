@@ -5,33 +5,21 @@ import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/users")
-@Controller
+@RequestMapping("/api/v1/users")
+@RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class UserRestController {
 
     private final UserService userService;
 
-    @GetMapping("/join")
-    public String joinPage(Model model){
-        log.info("join controller getmapping");
-        return "users/register";
-    }
     @PostMapping("/join")
-    public String join(@RequestParam("userName") String userName,
-                       @RequestParam("password") String password){
-        log.info("join controller name ={}, passowrd ={}", userName, password);
-        UserJoinRequest request = new UserJoinRequest(userName, password);
-        UserDto user = userService.join(request);
-        return "redirect:/";
+    public Response<UserJoinResponse> join(@RequestBody UserJoinRequest dto){
+        UserDto user = userService.join(dto);
+        return Response.success(new UserJoinResponse(user.getId(), user.getUserName()));
     }
 
     @PostMapping("/{userId}/role/change")
@@ -40,11 +28,6 @@ public class UserController {
         UserSwithResponse user = userService.toAdmin(userId, authentication.getName());
         log.info("toAdmin user ={}", user.getUserRole());
         return Response.success(user);
-    }
-
-    @GetMapping("/login")
-    public String loginPage(){
-        return "users/signin";
     }
 
     @PostMapping("/login")

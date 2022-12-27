@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class PostController {
+public class PostRestController {
 
     private final PostService postService;
 
