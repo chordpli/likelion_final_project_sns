@@ -11,7 +11,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public ResponseEntity<String> index(){
-        return ResponseEntity.ok().body("happy_new_year");
+        return ResponseEntity.ok().body("김준호");
     }
 
     @GetMapping("/test")
