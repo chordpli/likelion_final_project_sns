@@ -1,6 +1,6 @@
 # Likelion Final Personal Project - SNS 
 
-## API
+## API 체크리스트
 | 분류    |  HTTP  | URL                            |    설명     | 구현 완료 |
 |-------|:------:|:-------------------------------|:---------:|:-----:|
 | users |  POST  | /api/v1/users/join             |   회원가입    |  [v]  |
@@ -12,13 +12,17 @@
 | posts | DELETE | /api/v1/posts/{id}             |  포스트 삭제   |  [v]  |
 
 ## 도전과제
+
+### Admin
 | 분류    |  HTTP  | URL                            |    설명     | 구현 완료 |
 |-------|:------:|:-------------------------------|:---------:|:-----:|
 | users |  POST  | /api/v1/users/{id}/role/change | 유저 역할 변경  |  [v]  |
-
-### Admin
 - ADMIN 회원은 일반 회원의 권한을 ADMIN으로 승격시킬 수 있습니다.
 - ADMIM 회원은 모든 사용자의글과 댓글에 수정, 삭제를 할 수 있습니다.
+
+### UI
+- 회원 가입 구현 완료
+http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/
 
 ## ERD
 ![erd2](https://user-images.githubusercontent.com/101695482/209633615-ee1af6f9-716d-4cb5-8177-10f06a7e1546.png){: width="30%" height="30%"}
