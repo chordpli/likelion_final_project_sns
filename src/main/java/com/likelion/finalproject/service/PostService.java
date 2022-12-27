@@ -55,7 +55,7 @@ public class PostService {
                 );
 
         return PostReadResponse.builder()
-                .postId(readPost.getId())
+                .id(readPost.getId())
                 .title(readPost.getTitle())
                 .body(readPost.getBody())
                 .userName(readPost.getUser().getUserName())
