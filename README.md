@@ -54,6 +54,8 @@ https://chordplaylist.tistory.com/202
 https://chordplaylist.tistory.com/203
 ### JWT Exception
 https://chordplaylist.tistory.com/220
+### Gitlab 미러링
+https://chordplaylist.tistory.com/216
 
 ## 회고
 ### 리팩토링
