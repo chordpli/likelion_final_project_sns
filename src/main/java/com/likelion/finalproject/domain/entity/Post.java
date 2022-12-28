@@ -39,17 +39,4 @@ public class Post extends BaseEntity {
                 .lastModifiedAt(this.getLastModifiedAt())
                 .build();
     }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Override
-    public void setLastModifiedAt(LocalDateTime lastModifiedAt) {
-        super.setLastModifiedAt(lastModifiedAt);
-    }
 }

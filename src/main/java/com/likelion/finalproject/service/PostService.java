@@ -73,7 +73,7 @@ public class PostService {
         return postReadResponses;
     }
 
-    public Post modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
+    public void modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
         if (userName == null) {
             throw new SNSAppException(NOT_EXIST_TOKEN, "토큰이 존재하지 않습니다.");
         }
@@ -94,15 +94,7 @@ public class PostService {
             throw new SNSAppException(INVALID_PERMISSION, "사용자가 권한이 없습니다.");
         }
 
-        modifyPostTitleAndBodyAndLastModifiedAt(dto, post);
-        postRepository.save(post);
-        return post;
-    }
-
-    private void modifyPostTitleAndBodyAndLastModifiedAt(PostModifyRequest dto, Post post) {
-        post.setTitle(dto.getTitle());
-        post.setBody(dto.getBody());
-        post.setLastModifiedAt(LocalDateTime.now());
+        postRepository.save(dto.toEntity(postId, post.getUser()));
     }
 
     public void deletePost(Integer postId, String userName) {
