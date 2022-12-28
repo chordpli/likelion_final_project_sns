@@ -6,6 +6,7 @@ import com.likelion.finalproject.domain.dto.PostRequest;
 import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
+import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.PostRepository;
 import com.likelion.finalproject.repository.UserRepository;
@@ -28,10 +29,6 @@ public class PostService {
     private final UserRepository userRepository;
 
     public PostResponse post(PostRequest dto, String userName) {
-        if (userName == null) {
-            throw new SNSAppException(NOT_EXIST_TOKEN, NOT_EXIST_TOKEN.getMessage());
-        }
-
         // user가 찾아지지 않는다면 등록할 수 없다.
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(
@@ -66,10 +63,6 @@ public class PostService {
     }
 
     public void modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
-        if (userName == null) {
-            throw new SNSAppException(NOT_EXIST_TOKEN, NOT_EXIST_TOKEN.getMessage());
-        }
-
         // user가 찾아지지 않는다면 수정할 수 없다.
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(
@@ -113,5 +106,14 @@ public class PostService {
 
         // Post를 찾는 findById 메서드를 사용하였으므로 deleteById가 아닌 Delete 사용.
         postRepository.delete(post);
+
+/*
+        postRepository.delete(
+                postRepository.findById(postId)
+                        .orElseThrow(
+                                () -> new SNSAppException(POST_NOT_FOUND, POST_NOT_FOUND.getMessage())
+                        )
+        );
+*/
     }
 }
