@@ -54,14 +54,7 @@ public class PostService {
                         () -> new SNSAppException(POST_NOT_FOUND, "해당 페이지가 없습니다.")
                 );
 
-        return PostReadResponse.builder()
-                .id(readPost.getId())
-                .title(readPost.getTitle())
-                .body(readPost.getBody())
-                .userName(readPost.getUser().getUserName())
-                .createdAt(readPost.getCreatedAt())
-                .lastModifiedAt(readPost.getLastModifiedAt())
-                .build();
+        return PostReadResponse.of(readPost);
     }
 
     public List<PostReadResponse> getAllPost(PageRequest pageRequest) {
