@@ -18,15 +18,14 @@ public class UserRestController {
 
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest dto){
-        UserDto user = userService.join(dto);
-        return Response.success(new UserJoinResponse(user.getId(), user.getUserName()));
+        UserJoinResponse user = userService.join(dto);
+        return Response.success(user);
     }
 
     @PostMapping("/{userId}/role/change")
     public Response<UserSwithResponse> switchToAdmin(@PathVariable Integer userId, Authentication authentication){
         log.info("toAdmin userId ={}", userId);
         UserSwithResponse user = userService.toAdmin(userId, authentication.getName());
-        log.info("toAdmin user ={}", user.getUserRole());
         return Response.success(user);
     }
 

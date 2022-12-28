@@ -30,19 +30,14 @@ public class UserService{
 
     private long expireTimeMs = 1000 * 60 * 60;
 
-    public UserDto join(UserJoinRequest dto) {
+    public UserJoinResponse join(UserJoinRequest dto) {
         userRepository.findByUserName(dto.getUserName())
                 .ifPresent(user -> {
                     throw new SNSAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("userName = %s", dto.getUserName()));
                 });
 
         User savedUser = userRepository.save(dto.toEntity(encoder.encode(dto.getPassword())));
-        return UserDto.builder()
-                .id(savedUser.getId())
-                .userName(savedUser.getUserName())
-                .password(savedUser.getPassword())
-                .userRole(savedUser.getUserRole())
-                .build();
+        return new UserJoinResponse(savedUser.getId(), savedUser.getUserName());
     }
 
     public UserLoginResponse login(UserLoginRequest dto) {
