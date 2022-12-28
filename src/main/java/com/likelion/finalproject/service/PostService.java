@@ -60,10 +60,9 @@ public class PostService {
     public List<PostReadResponse> getAllPost(PageRequest pageRequest) {
         Page<Post> posts = postRepository.findAll(pageRequest);
         System.out.println(posts.getPageable());
-        List<PostReadResponse> postReadResponses = posts.stream()
+        return posts.stream()
                 .map(Post::toResponse)
                 .collect(Collectors.toList());
-        return postReadResponses;
     }
 
     public void modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
