@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping("/join")
     public String join(@ModelAttribute UserJoinRequest request) {
         log.info("join controller name ={}, passowrd ={}", request.getUserName(), request.getPassword());
-        UserDto user = userService.join(request);
+        userService.join(request);
         return "redirect:/";
     }
 
