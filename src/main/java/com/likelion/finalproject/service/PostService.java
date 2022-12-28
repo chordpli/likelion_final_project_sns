@@ -111,6 +111,7 @@ public class PostService {
             throw new SNSAppException(INVALID_PERMISSION, "사용자가 권한이 없습니다.");
         }
 
+        // Post를 찾는 findById 메서드를 사용하였으므로 deleteById가 아닌 Delete 사용.
         postRepository.delete(post);
     }
 }
