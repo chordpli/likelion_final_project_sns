@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.likelion.finalproject.exception.ErrorCode.*;
+
 @Component
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -27,19 +29,19 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         log.debug("log: exception: {} ", exception);
 
-        if (exception == null) {
-            log.info("토큰이 존재하지 않습니다.");
-            setResponse(response, ErrorCode.NOT_EXIST_TOKEN);
+        if (exception.equals(UNKNOWN_ERROR.name())) {
+            log.info("알 수 없는 에러가 발생하였습니다.");
+            setResponse(response, UNKNOWN_ERROR);
 
         }
-        if (exception.equals(ErrorCode.INVALID_TOKEN.name())) {
+        if (exception.equals(INVALID_TOKEN.name())) {
             log.info("토큰이 만료되었습니다.");
-            setResponse(response, ErrorCode.INVALID_TOKEN);
+            setResponse(response, INVALID_TOKEN);
         }
 
-        if (exception.equals(ErrorCode.INVALID_PERMISSION.name())) {
+        if (exception.equals(INVALID_PERMISSION.name())) {
             log.info("권한이 없습니다.");
-            setResponse(response, ErrorCode.INVALID_PERMISSION);
+            setResponse(response, INVALID_PERMISSION);
         }
     }
 
