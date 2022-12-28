@@ -2,7 +2,6 @@ package com.likelion.finalproject.service;
 
 import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.domain.entity.User;
-import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.UserRepository;
@@ -10,13 +9,10 @@ import com.likelion.finalproject.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import static com.likelion.finalproject.domain.enums.UserRole.ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +45,7 @@ public class UserService{
 
         // 비밀번호가 일치하는지 확인
         if (!encoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new SNSAppException(ErrorCode.INVALID_PASSWORD, String.format("userName 또는 password가 일치하지 않습니다."));
+            throw new SNSAppException(ErrorCode.INVALID_PASSWORD, "userName 또는 password가 일치하지 않습니다.");
         }
 
         // 토큰 리턴
@@ -58,7 +54,7 @@ public class UserService{
                 .build();
     }
 
-    public UserSwithResponse toAdmin(Integer userId, String name) {
+    public UserSwithResponse changeUserRoleToAdmin(Integer userId, String name) {
         log.info("service toAdmin userId ={}", userId);
         // 해당 유저가 있는지 확인
         User user = userRepository.findById(userId).orElseThrow(
@@ -71,13 +67,11 @@ public class UserService{
         );
 
         // 해당 유저가 관리자인지 확인
-        if (!admin.getUserRole().equals(UserRole.ADMIN)) {
+        if (!admin.getUserRole().equals(ADMIN)) {
             throw new SNSAppException(ErrorCode.INVALID_PERMISSION, "권한이 없습니다.");
         }
 
-        user.setUserRole(UserRole.ADMIN);
-        user.setLastModifiedAt(LocalDateTime.now());
-        userRepository.save(user);
+        userRepository.save(user.changeUserRole(ADMIN));
         return new UserSwithResponse(user.getUserName(), user.getUserRole());
     }
 }

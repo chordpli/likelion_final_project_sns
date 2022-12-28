@@ -24,7 +24,12 @@ public class User extends BaseUserEntity {
     @Column(name = "USER_NAME")
     private String userName;
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public User changeUserRole(UserRole userRole) {
+        return User.builder()
+                .id(this.id)
+                .password(this.password)
+                .userRole(userRole)
+                .userName(this.userName)
+                .build();
     }
 }
