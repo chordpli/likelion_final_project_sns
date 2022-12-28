@@ -1,4 +1,4 @@
-package com.likelion.finalproject.controller;
+package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
 import com.likelion.finalproject.domain.dto.*;

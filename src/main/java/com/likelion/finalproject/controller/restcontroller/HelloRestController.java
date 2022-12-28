@@ -1,4 +1,4 @@
-package com.likelion.finalproject.controller;
+package com.likelion.finalproject.controller.restcontroller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,7 @@
 package com.likelion.finalproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.finalproject.controller.restcontroller.PostRestController;
 import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
