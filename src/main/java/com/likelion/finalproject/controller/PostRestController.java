@@ -5,7 +5,6 @@ import com.likelion.finalproject.domain.dto.PostModifyRequest;
 import com.likelion.finalproject.domain.dto.PostReadResponse;
 import com.likelion.finalproject.domain.dto.PostRequest;
 import com.likelion.finalproject.domain.dto.PostResponse;
-import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,16 +49,16 @@ public class PostRestController {
 
     @PutMapping("/{postId}")
     public Response<PostResponse> modifiedPost(@PathVariable Integer postId,
-                                                       @RequestBody PostModifyRequest dto,
-                                                       Authentication authentication) {
+                                               @RequestBody PostModifyRequest dto,
+                                               Authentication authentication) {
         String userName = authentication.getName();
-        Post post = postService.modifyPost(postId, dto, userName);
+        postService.modifyPost(postId, dto, userName);
         return Response.success(new PostResponse("포스트 수정 완료", postId));
     }
 
     @DeleteMapping("/{postId}")
     public Response<PostResponse> deletePost(@PathVariable Integer postId,
-                                             Authentication authentication){
+                                             Authentication authentication) {
         String userName = authentication.getName();
         postService.deletePost(postId, userName);
         return Response.success(new PostResponse("포스트 삭제 완료", postId));
