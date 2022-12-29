@@ -2,10 +2,8 @@ package com.likelion.finalproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.finalproject.controller.restcontroller.UserRestController;
-import com.likelion.finalproject.domain.dto.UserDto;
-import com.likelion.finalproject.domain.dto.UserJoinRequest;
-import com.likelion.finalproject.domain.dto.UserLoginRequest;
-import com.likelion.finalproject.domain.dto.UserLoginResponse;
+import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.service.UserService;
@@ -24,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static com.likelion.finalproject.exception.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -59,29 +58,22 @@ class UserControllerTest {
     @Test
     @DisplayName("회원가입 성공")
     void join_success() throws Exception {
-        UserDto userDto = UserDto.builder()
+        UserJoinRequest request = new UserJoinRequest("jun", "abcd");
+        User savedUser = User.builder()
                 .id(1)
                 .userName("jun")
                 .password("abcd")
                 .userRole(UserRole.USER)
                 .build();
 
-        UserJoinRequest request = new UserJoinRequest("jun", "abcd");
-
-        given(userService.join(any()))
-                .willReturn(userDto);
+        UserJoinResponse response = new UserJoinResponse(savedUser.getId(), savedUser.getUserName());
+        willReturn(response).given(userService).join(request);
 
         String url = "/api/v1/users/join";
         mockMvc.perform(post(url).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resultCode").exists())
-                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$.result.userId").exists())
-                .andExpect(jsonPath("$.result.userId").value(1))
-                .andExpect(jsonPath("$.result.userName").exists())
-                .andExpect(jsonPath("$.result.userName").value("jun"))
                 .andDo(print());
 
         verify(userService, times(1)).join(any());

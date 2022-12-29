@@ -180,7 +180,7 @@ class PostControllerTest {
         User user = UserFixture.get("chordpli", "1234");
         token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
         PostModifyRequest request = new PostModifyRequest("title", "content");
-        given(postService.modifyPost(any(), any(), any())).willThrow(new SNSAppException(INVALID_PERMISSION, "유효하지 않은 토큰입니다."));
+        willThrow(new SNSAppException(INVALID_PERMISSION, INVALID_PERMISSION.getMessage())).given(postService).modifyPost(any(),any(),any());
 
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);
@@ -198,7 +198,7 @@ class PostControllerTest {
     @DisplayName("포스트 수정 실패_작성자 불일치")
     void fail_post_modify_mismatch_author() throws Exception {
         PostModifyRequest dto = new PostModifyRequest("title", "content");
-        given(postService.modifyPost(any(), any(), any())).willThrow(new SNSAppException(INVALID_PERMISSION, "사용자가 권한이 없습니다."));
+        willThrow(new SNSAppException(INVALID_PERMISSION, INVALID_PERMISSION.getMessage())).given(postService).modifyPost(any(),any(),any());
 
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);
@@ -216,8 +216,7 @@ class PostControllerTest {
     @DisplayName("포스트 수정 실패_DB 에러")
     void fail_post_modify_db_error() throws Exception {
         PostModifyRequest dto = new PostModifyRequest("title", "content");
-        given(postService.modifyPost(any(), any(), any())).willThrow(new SNSAppException(DATABASE_ERROR, "데이터 베이스에 에러가 발생하였습니다."));
-
+        willThrow(new SNSAppException(DATABASE_ERROR, DATABASE_ERROR.getMessage())).given(postService).modifyPost(any(),any(),any());
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);
 
@@ -238,10 +237,7 @@ class PostControllerTest {
 
         PostModifyRequest request = new PostModifyRequest("title", "content");
 
-        post.setTitle(request.getTitle());
-        post.setBody(request.getBody());
-
-        given(postService.modifyPost(any(), any(), any())).willReturn(post);
+        willReturn(request.toEntity(post.getId(),user)).given(postService).modifyPost(any(),any(),any());
 
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);

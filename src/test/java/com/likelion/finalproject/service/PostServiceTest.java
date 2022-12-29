@@ -131,13 +131,13 @@ class PostServiceTest {
 
         PostModifyRequest request = new PostModifyRequest("수정 제목", "수정 내용");
 
-        fixture.setTitle(request.getTitle());
-        fixture.setTitle(request.getBody());
+        fixture = request.toEntity(fixture.getId(), user);
 
-        when(postRepository.save(any()))
-                .thenReturn(fixture);
+        when(postRepository.save(any())).thenReturn(fixture);
 
-        Assertions.assertDoesNotThrow(() -> postService.modifyPost(fixture.getId(), request, user.getUserName()));
+        Post finalFixture = fixture;
+
+        Assertions.assertDoesNotThrow(() -> postService.modifyPost(finalFixture.getId(), request, user.getUserName()));
         assertEquals(fixture.getTitle(), request.getTitle());
     }
 
