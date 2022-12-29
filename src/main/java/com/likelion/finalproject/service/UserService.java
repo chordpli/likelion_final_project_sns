@@ -2,7 +2,6 @@ package com.likelion.finalproject.service;
 
 import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.domain.entity.User;
-import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.UserRepository;
 import com.likelion.finalproject.utils.JwtUtil;
