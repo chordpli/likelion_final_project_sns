@@ -235,9 +235,9 @@ class PostControllerTest {
         User user = UserFixture.get("chordpli", "1234");
         Post post = PostFixture.get(user);
 
-        PostModifyRequest request = new PostModifyRequest("title", "content");
+        PostModifyRequest request = new PostModifyRequest("title", "body");
 
-        willReturn(request.toEntity(post.getId(),user)).given(postService).modifyPost(any(),any(),any());
+        willDoNothing().given(postService).modifyPost(any(),any(),any());
 
         Integer postId = 1;
         String url = String.format("/api/v1/posts/%d", postId);

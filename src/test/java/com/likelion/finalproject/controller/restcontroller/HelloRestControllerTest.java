@@ -48,6 +48,7 @@ class HelloRestControllerTest {
         int number = 1234;
 
         String url = String.format("/api/v1/hello/%d", number);
+
         given(helloService.sumOfDigit(number)).willReturn(10);
         mockMvc.perform(get(url)
                         .with(csrf()))
