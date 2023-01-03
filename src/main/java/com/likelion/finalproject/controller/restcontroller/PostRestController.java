@@ -1,10 +1,8 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
-import com.likelion.finalproject.domain.dto.PostModifyRequest;
-import com.likelion.finalproject.domain.dto.PostReadResponse;
-import com.likelion.finalproject.domain.dto.PostRequest;
-import com.likelion.finalproject.domain.dto.PostResponse;
+import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.service.CommentService;
 import com.likelion.finalproject.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +23,7 @@ import java.util.List;
 public class PostRestController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     /* 게시글 Post */
 
@@ -74,6 +72,28 @@ public class PostRestController {
     }
 
     /* 댓글 Comment */
+    @ApiOperation(value = "댓글 작성")
+    @PostMapping("/{postId}/comments")
+    public Response<CommentWriteResponse> writeComment(@PathVariable Integer postId,
+                                                       @RequestBody CommentRequest request,
+                                                       Authentication authentication){
+        String userName = authentication.getName();
+        CommentWriteResponse response = commentService.writeComment(postId, request, userName);
+        return Response.success(response);
+    }
+
+    @ApiOperation(value = "댓글 수정")
+    @PutMapping("/{postId}/comments/{id}")
+    public Response<CommentModifyResponse> modifyComment(@PathVariable Integer postId,
+                                                       @PathVariable Integer id,
+                                                       @RequestBody CommentRequest request,
+                                                       Authentication authentication){
+        String userName = authentication.getName();
+        CommentModifyResponse response = commentService.modifyComment(postId, id, request, userName);
+        return Response.success(response);
+    }
+
+
     /* 좋아요 Like  */
 
 }
