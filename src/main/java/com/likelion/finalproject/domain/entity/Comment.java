@@ -15,6 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 public class Comment extends BaseEntity{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String comment;
@@ -27,5 +28,7 @@ public class Comment extends BaseEntity{
     @ManyToOne(fetch = LAZY)
     private Post post;
 
-
+    public void update(String comment) {
+        this.comment = comment;
+    }
 }
