@@ -6,7 +6,6 @@ import com.likelion.finalproject.domain.dto.PostRequest;
 import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
-import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.PostRepository;
 import com.likelion.finalproject.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,13 +25,17 @@ import static com.likelion.finalproject.exception.ErrorCode.*;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final Services service;
 
+    /**
+     * dto의 내용으로 userName 사용자의 게시글을 작성합니다.
+     * @param dto
+     * @param userName
+     * @return
+     */
     public PostResponse post(PostRequest dto, String userName) {
         // user가 찾아지지 않는다면 등록할 수 없다.
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(
-                        () -> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
-                );
+        User user = service.validateGetUserByUserName(userName);
 
         Post post = Post.builder()
                 .user(user)
@@ -45,15 +47,21 @@ public class PostService {
         return new PostResponse("포스트 등록 완료", post.getId());
     }
 
+    /**
+     * 작성된 게시글을 상세 조회 합니다.
+     * @param postId
+     * @return
+     */
     public PostReadResponse getPost(Integer postId) {
-        Post readPost = postRepository.findById(postId)
-                .orElseThrow(
-                        () -> new SNSAppException(POST_NOT_FOUND, POST_NOT_FOUND.getMessage())
-                );
-
+        Post readPost = service.validateGetPostById(postId);
         return PostReadResponse.of(readPost);
     }
 
+    /**
+     * 작성된 모든 게시글을 불러옵니다.
+     * @param pageRequest
+     * @return
+     */
     public List<PostReadResponse> getAllPost(PageRequest pageRequest) {
         Page<Post> posts = postRepository.findAll(pageRequest);
         System.out.println(posts.getPageable());
@@ -62,58 +70,35 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 해당 postId를 갖고 있는 Post를 dto의 내용대로 수정합니다.
+     *
+     * @param postId
+     * @param dto
+     * @param userName
+     * @throws SNSAppException
+     */
     public void modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
-        // user가 찾아지지 않는다면 수정할 수 없다.
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(
-                        () -> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
-                );
-
-        // post가 찾아지지 않는다면 수정할 수 없다.
-        Post post = postRepository.findById(postId)
-                .orElseThrow(
-                        () -> new SNSAppException(POST_NOT_FOUND, POST_NOT_FOUND.getMessage())
-                );
-        // User가 관리자가 아닌데, User와 Post를 작성한 User가 다르면 수정할 수 없다.
-        if (!user.getUserRole().equals(ADMIN) && !user.getId().equals(post.getUser().getId())) {
-            throw new SNSAppException(INVALID_PERMISSION, INVALID_PERMISSION.getMessage());
-        }
-
+        User user = service.validateGetUserByUserName(userName);
+        Post post = service.validateGetPostById(postId);
+        service.validateCheckAdminAndEqualWriter(user, post);
         postRepository.save(dto.toEntity(postId, post.getUser()));
     }
 
+    /**
+     * 해당 postId를 갖고 있는 Post를 삭제합니다.
+     *
+     * @param postId
+     * @param userName
+     */
     public void deletePost(Integer postId, String userName) {
-        if (userName == null) {
-            throw new SNSAppException(NOT_EXIST_TOKEN, NOT_EXIST_TOKEN.getMessage());
-        }
-
-        // user가 찾아지지 않는다면 삭제할 수 없다.
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(
-                        () -> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
-                );
-
-        // post가 찾아지지 않는다면 삭제할 수 없다.
-        Post post = postRepository.findById(postId)
-                .orElseThrow(
-                        () -> new SNSAppException(POST_NOT_FOUND, POST_NOT_FOUND.getMessage())
-                );
-
-        // User가 관리자가 아닌데, User와 Post를 작성한 User가 다르면 삭제할 수 없다.
-        if (!user.getUserRole().equals(ADMIN) && !user.getId().equals(post.getUser().getId())) {
-            throw new SNSAppException(INVALID_PERMISSION, INVALID_PERMISSION.getMessage());
-        }
-
-        // Post를 찾는 findById 메서드를 사용하였으므로 deleteById가 아닌 Delete 사용.
+        User user = service.validateGetUserByUserName(userName);
+        Post post = service.validateGetPostById(postId);
+        service.validateCheckAdminAndEqualWriter(user, post);
         postRepository.delete(post);
-
-/*
-        postRepository.delete(
-                postRepository.findById(postId)
-                        .orElseThrow(
-                                () -> new SNSAppException(POST_NOT_FOUND, POST_NOT_FOUND.getMessage())
-                        )
-        );
-*/
     }
+
+
+
+
 }
