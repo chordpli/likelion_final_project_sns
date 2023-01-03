@@ -4,10 +4,7 @@ import com.likelion.finalproject.domain.enums.AlarmArgs;
 import com.likelion.finalproject.domain.enums.AlarmType;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -20,13 +17,19 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 public class Alarm extends BaseEntity{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private AlarmType alarmType;
-
-    private AlarmArgs args;
-
+    // 알림을 받는 사람 입니다.
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = LAZY)
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    private AlarmType alarmType; // like인지 comment인지
+
+    private Integer fromUserId;
+    private Integer targetId; // podst id
+    private String text;
+
 }
