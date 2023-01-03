@@ -2,10 +2,7 @@ package com.likelion.finalproject.domain.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -15,10 +12,11 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Entity
+@Entity(name = "LIKES")
 public class Like extends BaseEntity{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @JoinColumn(name = "user_id")
