@@ -6,12 +6,14 @@ import com.likelion.finalproject.domain.dto.PostReadResponse;
 import com.likelion.finalproject.domain.dto.PostRequest;
 import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.service.PostService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,9 @@ public class PostRestController {
 
     private final PostService postService;
 
+    /* 게시글 Post */
+
+    @ApiOperation(value = "게시글 작성")
     @PostMapping
     public Response<PostResponse> post(@RequestBody PostRequest dto, Authentication authentication) {
         String userName = authentication.getName();
@@ -33,6 +38,7 @@ public class PostRestController {
         return Response.success(postResponse);
     }
 
+    @ApiOperation(value = "게시글 단건 조회 하기")
     @GetMapping("/{postId}")
     public Response<PostReadResponse> getPost(@PathVariable Integer postId) {
         log.info("postId = {}", postId);
@@ -40,6 +46,7 @@ public class PostRestController {
         return Response.success(post);
     }
 
+    @ApiOperation(value = "게시글 목록 확인")
     @GetMapping
     public Response<Page<PostReadResponse>> getPostList() {
         PageRequest pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
@@ -47,6 +54,7 @@ public class PostRestController {
         return Response.success(new PageImpl<>(post));
     }
 
+    @ApiOperation(value = "게시글 수정")
     @PutMapping("/{postId}")
     public Response<PostResponse> modifiedPost(@PathVariable Integer postId,
                                                @RequestBody PostModifyRequest dto,
@@ -56,6 +64,7 @@ public class PostRestController {
         return Response.success(new PostResponse("포스트 수정 완료", postId));
     }
 
+    @ApiOperation(value = "게시글 삭제")
     @DeleteMapping("/{postId}")
     public Response<PostResponse> deletePost(@PathVariable Integer postId,
                                              Authentication authentication) {
@@ -63,5 +72,8 @@ public class PostRestController {
         postService.deletePost(postId, userName);
         return Response.success(new PostResponse("포스트 삭제 완료", postId));
     }
+
+    /* 댓글 Comment */
+    /* 좋아요 Like  */
 
 }
