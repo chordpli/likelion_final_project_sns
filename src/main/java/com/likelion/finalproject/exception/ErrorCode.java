@@ -16,8 +16,11 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "사용자가 권한이 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 포스트가 존재하지 않습니다.."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB에러"),
-    NOT_EXIST_TOKEN(HttpStatus.UNAUTHORIZED,"토큰이 존재하지 않습니다." ),
-    UNKNOWN_ERROR(HttpStatus.BAD_REQUEST, "알 수 없는 에러가 발생하였습니다."); ;
+    NOT_EXIST_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 존재하지 않습니다."),
+    UNKNOWN_ERROR(HttpStatus.BAD_REQUEST, "알 수 없는 에러가 발생하였습니다."),
+    MISMATCH_USER(HttpStatus.UNAUTHORIZED, "사용자가 일치하지 않습니다."),
+    MISMATCH_COMMENT(HttpStatus.UNAUTHORIZED, "댓글이 일치하지 않습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 존재하지 않습니다." );
 
     private HttpStatus status;
     private String message;
