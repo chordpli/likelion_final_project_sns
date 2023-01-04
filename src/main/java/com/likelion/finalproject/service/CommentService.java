@@ -1,9 +1,11 @@
 package com.likelion.finalproject.service;
 
 import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.entity.Alarm;
 import com.likelion.finalproject.domain.entity.Comment;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
+import com.likelion.finalproject.repository.AlarmRepository;
 import com.likelion.finalproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,11 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.likelion.finalproject.domain.enums.AlarmType.NEW_COMMENT_ON_POST;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
     private final Services service;
 
 
@@ -30,7 +35,7 @@ public class CommentService {
                 .comment(requset.getComment())
                 .build();
         commentRepository.save(savedComment);
-
+        alarmRepository.save(Alarm.toEntity(user, post, NEW_COMMENT_ON_POST));
         return CommentWriteResponse.of(savedComment);
     }
 

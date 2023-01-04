@@ -1,11 +1,12 @@
 package com.likelion.finalproject.domain.entity;
 
-import com.likelion.finalproject.domain.enums.AlarmArgs;
+import com.likelion.finalproject.domain.dto.AlarmResponse;
 import com.likelion.finalproject.domain.enums.AlarmType;
 import lombok.*;
 
 import javax.persistence.*;
 
+import static com.likelion.finalproject.domain.enums.AlarmType.NEW_COMMENT_ON_POST;
 import static javax.persistence.FetchType.LAZY;
 
 @AllArgsConstructor
@@ -20,7 +21,9 @@ public class Alarm extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // 알림을 받는 사람 입니다.
+    /**
+     * 알림을 받는 사람.
+     */
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = LAZY)
     private User user;
@@ -28,8 +31,36 @@ public class Alarm extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private AlarmType alarmType; // like인지 comment인지
 
+    /**
+     * 알림을 발생시킨 userID
+     */
     private Integer fromUserId;
+
+    /**
+     * 알림이 발생된 postID
+     */
     private Integer targetId; // podst id
+
     private String text;
 
+    public static Alarm toEntity(User user, Post post, AlarmType alarmType) {
+        return Alarm.builder()
+                .user(post.getUser())
+                .alarmType(alarmType)
+                .fromUserId(user.getId())
+                .targetId(post.getId())
+                .text(alarmType.getText())
+                .build();
+    }
+
+    public AlarmResponse toResponse() {
+        return AlarmResponse.builder()
+                .id(this.id)
+                .alarmType(this.alarmType)
+                .fromUserId(this.fromUserId)
+                .targetId(this.targetId)
+                .text(this.alarmType.getText())
+                .createdAt(this.getCreatedAt())
+                .build();
+    }
 }
