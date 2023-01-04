@@ -6,7 +6,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-import static com.likelion.finalproject.domain.enums.AlarmType.NEW_COMMENT_ON_POST;
 import static javax.persistence.FetchType.LAZY;
 
 @AllArgsConstructor

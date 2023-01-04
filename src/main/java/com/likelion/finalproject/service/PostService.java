@@ -1,6 +1,9 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.dto.PostModifyRequest;
+import com.likelion.finalproject.domain.dto.PostReadResponse;
+import com.likelion.finalproject.domain.dto.PostRequest;
+import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
@@ -13,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.likelion.finalproject.domain.enums.UserRole.ADMIN;
-import static com.likelion.finalproject.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -97,8 +97,8 @@ public class PostService {
 
     public List<PostReadResponse> getMyAllPost(String userName, PageRequest pageable) {
         User user = service.validateGetUserByUserName(userName);
-        Page<Post> myfeeds = postRepository.findPostsByUser(user, pageable);
-        return myfeeds.stream()
+        Page<Post> myFeeds = postRepository.findPostsByUser(user, pageable);
+        return myFeeds.stream()
                 .map(Post::toResponse)
                 .collect(Collectors.toList());
     }
