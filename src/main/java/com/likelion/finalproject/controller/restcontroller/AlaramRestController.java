@@ -2,7 +2,6 @@ package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
 import com.likelion.finalproject.domain.dto.AlarmResponse;
-import com.likelion.finalproject.domain.dto.PostReadResponse;
 import com.likelion.finalproject.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
