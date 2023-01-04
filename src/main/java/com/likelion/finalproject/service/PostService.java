@@ -1,9 +1,6 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.dto.PostModifyRequest;
-import com.likelion.finalproject.domain.dto.PostReadResponse;
-import com.likelion.finalproject.domain.dto.PostRequest;
-import com.likelion.finalproject.domain.dto.PostResponse;
+import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
@@ -98,7 +95,11 @@ public class PostService {
         postRepository.delete(post);
     }
 
-
-
-
+    public List<PostReadResponse> getMyAllPost(String userName, PageRequest pageable) {
+        User user = service.validateGetUserByUserName(userName);
+        Page<Post> myfeeds = postRepository.findPostsByUser(user, pageable);
+        return myfeeds.stream()
+                .map(Post::toResponse)
+                .collect(Collectors.toList());
+    }
 }

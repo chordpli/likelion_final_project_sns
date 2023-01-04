@@ -122,4 +122,15 @@ public class PostRestController {
         String userName = authentication.getName();
         return Response.success(likeService.increaseLike(postId, userName));
     }
+
+
+    /* 마이피드 */
+    @ApiOperation("마이 피드 조회")
+    @GetMapping("/my")
+    public Response<Page<PostReadResponse>> getMyFeed(Authentication authentication) {
+        String userName = authentication.getName();
+        PageRequest pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
+        List<PostReadResponse> myFeeds = postService.getMyAllPost(userName, pageable);
+        return Response.success(new PageImpl<>(myFeeds));
+    }
 }
