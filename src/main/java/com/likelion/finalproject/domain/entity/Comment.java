@@ -1,5 +1,6 @@
 package com.likelion.finalproject.domain.entity;
 
+import com.likelion.finalproject.domain.dto.CommentReadResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,5 +31,15 @@ public class Comment extends BaseEntity{
 
     public void update(String comment) {
         this.comment = comment;
+    }
+
+    public CommentReadResponse toResponse() {
+        return CommentReadResponse.builder()
+                .id(this.id)
+                .comment(this.comment)
+                .userName(this.user.getUserName())
+                .postId(this.post.getId())
+                .createdAt(this.getCreatedAt())
+                .build();
     }
 }
