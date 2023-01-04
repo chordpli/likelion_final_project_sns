@@ -549,7 +549,7 @@ class PostControllerTest {
 
         String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
 
-        mockMvc.perform(post(url).with(csrf())
+        mockMvc.perform(put(url).with(csrf())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
@@ -569,7 +569,7 @@ class PostControllerTest {
 
         String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
 
-        mockMvc.perform(post(url).with(csrf())
+        mockMvc.perform(put(url).with(csrf())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
@@ -589,7 +589,7 @@ class PostControllerTest {
 
         String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
 
-        mockMvc.perform(post(url).with(csrf())
+        mockMvc.perform(put(url).with(csrf())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
@@ -609,12 +609,37 @@ class PostControllerTest {
 
         String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
 
-        mockMvc.perform(post(url).with(csrf())
+        mockMvc.perform(put(url).with(csrf())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andExpect(status().isInternalServerError())
                 .andDo(print());
     }
-    
+
+    /* 댓글 수정 */
+    @Test
+    @DisplayName("댓글 삭제 성공")
+    void success_delete_comment() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+        Post post = PostFixture.get(user);
+        Comment comment = CommentFixture.get(user, post);
+
+        given(commentService.deleteComment(any(), any(), any())).willReturn(new CommentDeleteResponse("댓글 삭제 완료", 1));
+
+        String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
+
+        mockMvc.perform(delete(url).with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").exists())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").exists())
+                .andExpect(jsonPath("$.result.id").value(1))
+                .andExpect(jsonPath("$.result.message").exists())
+                .andExpect(jsonPath("$.result.message").value("댓글 삭제 완료"))
+                .andDo(print());
+    }
 }
