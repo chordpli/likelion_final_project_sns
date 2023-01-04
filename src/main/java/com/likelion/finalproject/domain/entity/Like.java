@@ -27,4 +27,10 @@ public class Like extends BaseEntity{
     @ManyToOne(fetch = LAZY)
     private Post post;
 
+    public static Like toEntity(Post post, User user) {
+        return Like.builder()
+                .user(user)
+                .post(post)
+                .build();
+    }
 }

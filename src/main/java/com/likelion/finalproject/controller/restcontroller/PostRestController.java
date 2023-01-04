@@ -3,6 +3,7 @@ package com.likelion.finalproject.controller.restcontroller;
 import com.likelion.finalproject.domain.Response;
 import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.service.CommentService;
+import com.likelion.finalproject.service.LikeService;
 import com.likelion.finalproject.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class PostRestController {
 
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     /* 게시글 Post */
 
@@ -114,4 +116,10 @@ public class PostRestController {
 
 
     /* 좋아요 Like  */
+    @ApiOperation("좋아요 증가")
+    @PostMapping("/{postId}/likes")
+    public Response<String> IncreaseLike(@PathVariable Integer postId, Authentication authentication) {
+        String userName = authentication.getName();
+        return Response.success(likeService.increaseLike(postId, userName));
+    }
 }
