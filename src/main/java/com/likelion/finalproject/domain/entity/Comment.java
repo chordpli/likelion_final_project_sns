@@ -2,8 +2,12 @@ package com.likelion.finalproject.domain.entity;
 
 import com.likelion.finalproject.domain.dto.CommentReadResponse;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -14,6 +18,8 @@ import static javax.persistence.FetchType.LAZY;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@SQLDelete(sql = "UPDATE comment SET deleted_at = current_timestamp WHERE id = ?")
+@Where(clause = "deleted_at is null")
 public class Comment extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +34,8 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "post_id")
     @ManyToOne(fetch = LAZY)
     private Post post;
+
+    private LocalDateTime deletedAt;
 
     public void update(String comment) {
         this.comment = comment;

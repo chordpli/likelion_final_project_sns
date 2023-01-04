@@ -25,13 +25,31 @@ public class LikeService {
         Post post = service.validateGetPostById(postId);
         User user = service.validateGetUserByUserName(userName);
 
-        Optional<Like> like = likeRepository.findLikeByUserAndPost(user, post);
+        Optional<Like> optionalLike = likeRepository.findLikeByUserAndPost(user, post);
+        Like like;
 
-        if (like.isPresent()) {
-            likeRepository.delete(like.get());
+        if (optionalLike.isPresent()) {
+            like = optionalLike.get();
+        }else{
+            like = likeRepository.save(Like.toEntity(post, user));
+            Optional<Like> checkLike = likeRepository.findById(like.getId());
+
+            if (checkLike.isPresent()) {
+                Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetId(user.getId(), post.getId())
+                        .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
+            }
+
+            return "좋아요를 눌렀습니다";
+        }
+
+        if (like.getDeletedAt() == null) {
+            likeRepository.delete(like);
+            // like 가 delete 됐는지 한번 더 확인해야하지 않나..?
+            Optional<Alarm> alarm = alarmRepository.findAlarmByFromUserIdAndTargetId(user.getId(), post.getId());
+            alarm.ifPresent(alarmRepository::delete);
             return "좋아요를 취소했습니다.";
         }else{
-            likeRepository.save(Like.toEntity(post, user));
+            like.cancelDeletion();
             Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetId(user.getId(), post.getId())
                     .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
             return "좋아요를 눌렀습니다";

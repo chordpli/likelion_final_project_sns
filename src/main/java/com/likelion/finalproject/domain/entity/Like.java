@@ -1,8 +1,10 @@
 package com.likelion.finalproject.domain.entity;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -13,6 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "LIKES")
+@SQLDelete(sql = "UPDATE likes SET deleted_at = current_timestamp WHERE id = ?")
 public class Like extends BaseEntity{
 
     @Id
@@ -26,6 +29,12 @@ public class Like extends BaseEntity{
     @JoinColumn(name = "post_id")
     @ManyToOne(fetch = LAZY)
     private Post post;
+
+    private LocalDateTime deletedAt;
+
+    public void cancelDeletion() {
+        this.deletedAt = null;
+    }
 
     public static Like toEntity(Post post, User user) {
         return Like.builder()
