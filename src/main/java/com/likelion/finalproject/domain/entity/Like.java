@@ -30,10 +30,9 @@ public class Like extends BaseEntity{
     @ManyToOne(fetch = LAZY)
     private Post post;
 
-    private LocalDateTime deletedAt;
-
+    @Override
     public void cancelDeletion() {
-        this.deletedAt = null;
+        super.cancelDeletion();
     }
 
     public static Like toEntity(Post post, User user) {

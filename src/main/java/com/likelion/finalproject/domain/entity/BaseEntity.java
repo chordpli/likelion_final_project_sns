@@ -27,4 +27,10 @@ public abstract class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime lastModifiedAt;
+
+    private LocalDateTime deletedAt;
+
+    public void cancelDeletion() {
+        this.deletedAt = null;
+    }
 }

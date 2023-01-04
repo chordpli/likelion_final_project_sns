@@ -28,29 +28,37 @@ public class LikeService {
         Optional<Like> optionalLike = likeRepository.findLikeByUserAndPost(user, post);
         Like like;
 
+        // 좋아요 기록이 있는지 확인합니다.
         if (optionalLike.isPresent()) {
             like = optionalLike.get();
-        }else{
+        } else {
+            // 좋아요 기록이 없다면 처음 좋아요를 누른 것이므로 좋아요 기록을 저장합니다.
             like = likeRepository.save(Like.toEntity(post, user));
             Optional<Like> checkLike = likeRepository.findById(like.getId());
 
+            // 좋아요 기록이 DB에 잘 저장되었다면, Alarm을 보냅니다.
             if (checkLike.isPresent()) {
-                Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetId(user.getId(), post.getId())
+                Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
                         .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
             }
-
             return "좋아요를 눌렀습니다";
         }
 
+        // 받아온 like 기록중 getDeletedAt의 정보를 확인합니다.
         if (like.getDeletedAt() == null) {
+            // 이미 like를 한 적이 있는데 getDeletedAt이 NULL이라면 다시 한 번 버튼을 누른 것이므로 좋아요를 취소합니다.
             likeRepository.delete(like);
-            // like 가 delete 됐는지 한번 더 확인해야하지 않나..?
-            Optional<Alarm> alarm = alarmRepository.findAlarmByFromUserIdAndTargetId(user.getId(), post.getId());
+            // like를 soft delete 처리한 후 알람 기록도 삭제합니다.
+            Optional<Alarm> alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST);
             alarm.ifPresent(alarmRepository::delete);
             return "좋아요를 취소했습니다.";
-        }else{
+        } else {
+            // 이미 like를 한 기록이 있는데 getDeletedAt이 있다면, 좋아요를 취소한 상태에서 다시 좋아요 버튼을 누른 상황입니다.
+            // deletedAt 기록을 삭제합니다.
             like.cancelDeletion();
-            Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetId(user.getId(), post.getId())
+
+            // 다시 알람을 보냅니다.
+            Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
                     .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
             return "좋아요를 눌렀습니다";
         }

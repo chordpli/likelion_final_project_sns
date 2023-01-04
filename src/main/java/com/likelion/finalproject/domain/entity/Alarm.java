@@ -62,4 +62,9 @@ public class Alarm extends BaseEntity{
                 .createdAt(this.getCreatedAt())
                 .build();
     }
+
+    @Override
+    public void cancelDeletion() {
+        super.cancelDeletion();
+    }
 }
