@@ -7,6 +7,8 @@ import com.likelion.finalproject.domain.dto.PostResponse;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
+import com.likelion.finalproject.repository.CommentRepository;
+import com.likelion.finalproject.repository.LikesRepository;
 import com.likelion.finalproject.repository.PostRepository;
 import com.likelion.finalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final LikesRepository likeRepository;
+    private final CommentRepository commentRepository;
     private final ValidateService service;
 
     /**
@@ -98,6 +102,8 @@ public class PostService {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
         service.validateCheckAdminAndEqualWriter(user, post);
+        commentRepository.
+        likesRepository.deleteAllByPost(post);
         postRepository.delete(post);
     }
 

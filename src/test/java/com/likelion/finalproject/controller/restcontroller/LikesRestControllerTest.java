@@ -1,7 +1,7 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.finalproject.service.LikeService;
+import com.likelion.finalproject.service.LikesService;
 import com.likelion.finalproject.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
-@WebMvcTest(LikeRestController.class)
+@WebMvcTest(LikesRestController.class)
 @WithMockUser
-class LikeRestControllerTest {
+class LikesRestControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -24,7 +24,7 @@ class LikeRestControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    LikeService likeService;
+    LikesService likeService;
 
     private String token;
     @Value("${jwt.secret}")

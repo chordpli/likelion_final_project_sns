@@ -5,7 +5,7 @@ import com.likelion.finalproject.domain.entity.Likes;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.repository.AlarmRepository;
-import com.likelion.finalproject.repository.LikeRepository;
+import com.likelion.finalproject.repository.LikesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +16,9 @@ import static com.likelion.finalproject.domain.enums.AlarmType.NEW_LIKE_ON_POST;
 
 @Service
 @RequiredArgsConstructor
-public class LikeService {
+public class LikesService {
 
-    private final LikeRepository likeRepository;
+    private final LikesRepository likeRepository;
     private final AlarmRepository alarmRepository;
     private final ValidateService service;
 

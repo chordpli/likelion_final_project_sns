@@ -1,7 +1,7 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
-import com.likelion.finalproject.service.LikeService;
+import com.likelion.finalproject.service.LikesService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class LikeRestController {
+public class LikesRestController {
 
-    private final LikeService likeService;
+    private final LikesService likeService;
 
     /* 좋아요 Like  */
     @ApiOperation("좋아요 증가")
