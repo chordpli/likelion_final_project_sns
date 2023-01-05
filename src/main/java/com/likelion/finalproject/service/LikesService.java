@@ -65,4 +65,9 @@ public class LikesService {
             return "좋아요를 눌렀습니다";
         }
     }
+
+    public int getLikeCount(Integer postId) {
+        Post post = service.validateGetPostById(postId);
+        return likeRepository.countLikesByPost(post);
+    }
 }

@@ -1,15 +1,13 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
+import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.service.LikesService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/posts")
 @RestController
@@ -25,6 +23,12 @@ public class LikesRestController {
     public Response<String> IncreaseLike(@PathVariable Integer postId, Authentication authentication) {
         String userName = authentication.getName();
         return Response.success(likeService.increaseLike(postId, userName));
+    }
+
+    @ApiOperation("좋아요 개수 확인")
+    @GetMapping("/{postId}/likes")
+    public Response<Integer> getLikeCount(@PathVariable Integer postId) {
+        return Response.success(likeService.getLikeCount(postId));
     }
 }
 
