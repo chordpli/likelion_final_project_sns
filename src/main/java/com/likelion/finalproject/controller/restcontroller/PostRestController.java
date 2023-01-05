@@ -24,11 +24,8 @@ import java.util.List;
 public class PostRestController {
 
     private final PostService postService;
-    private final CommentService commentService;
-    private final LikeService likeService;
 
     /* 게시글 Post */
-
     @ApiOperation(value = "게시글 작성")
     @PostMapping
     public Response<PostResponse> post(@RequestBody PostRequest dto, Authentication authentication) {
@@ -72,57 +69,6 @@ public class PostRestController {
         postService.deletePost(postId, userName);
         return Response.success(new PostResponse("포스트 삭제 완료", postId));
     }
-
-    /* 댓글 Comment */
-
-    @ApiOperation(value = "댓글 조회")
-    @GetMapping("/{postId}/comments")
-    public Response<Page<CommentReadResponse>> getComments(@PathVariable Integer postId) {
-        PageRequest pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
-        List<CommentReadResponse> comments = commentService.getAllComments(pageable, postId);
-        return Response.success(new PageImpl<>(comments));
-    }
-
-    @ApiOperation(value = "댓글 작성")
-    @PostMapping("/{postId}/comments")
-    public Response<CommentWriteResponse> writeComment(@PathVariable Integer postId,
-                                                       @RequestBody CommentRequest request,
-                                                       Authentication authentication) {
-        String userName = authentication.getName();
-        CommentWriteResponse response = commentService.writeComment(postId, request, userName);
-        return Response.success(response);
-    }
-
-    @ApiOperation(value = "댓글 수정")
-    @PutMapping("/{postId}/comments/{id}")
-    public Response<CommentModifyResponse> modifyComment(@PathVariable Integer postId,
-                                                         @PathVariable Integer id,
-                                                         @RequestBody CommentRequest request,
-                                                         Authentication authentication) {
-        String userName = authentication.getName();
-        CommentModifyResponse response = commentService.modifyComment(postId, id, request, userName);
-        return Response.success(response);
-    }
-
-    @ApiOperation(value = "댓글 삭제")
-    @DeleteMapping("/{postId}/comments/{id}")
-    public Response<CommentDeleteResponse> deleteComment(@PathVariable Integer postId,
-                                                         @PathVariable Integer id,
-                                                         Authentication authentication) {
-        String userName = authentication.getName();
-        CommentDeleteResponse response = commentService.deleteComment(postId, id, userName);
-        return Response.success(response);
-    }
-
-
-    /* 좋아요 Like  */
-    @ApiOperation("좋아요 증가")
-    @PostMapping("/{postId}/likes")
-    public Response<String> IncreaseLike(@PathVariable Integer postId, Authentication authentication) {
-        String userName = authentication.getName();
-        return Response.success(likeService.increaseLike(postId, userName));
-    }
-
 
     /* 마이피드 */
     @ApiOperation("마이 피드 조회")

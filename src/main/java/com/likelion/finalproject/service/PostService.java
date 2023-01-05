@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final Services service;
+    private final ValidateService service;
 
     /**
      * dto의 내용으로 userName 사용자의 게시글을 작성합니다.
@@ -30,6 +31,7 @@ public class PostService {
      * @param userName
      * @return
      */
+    @Transactional
     public PostResponse post(PostRequest dto, String userName) {
         // user가 찾아지지 않는다면 등록할 수 없다.
         User user = service.validateGetUserByUserName(userName);
@@ -49,6 +51,7 @@ public class PostService {
      * @param postId
      * @return
      */
+    @Transactional
     public PostReadResponse getPost(Integer postId) {
         Post readPost = service.validateGetPostById(postId);
         return PostReadResponse.of(readPost);
@@ -59,6 +62,7 @@ public class PostService {
      * @param pageRequest
      * @return
      */
+    @Transactional
     public List<PostReadResponse> getAllPost(PageRequest pageRequest) {
         Page<Post> posts = postRepository.findAll(pageRequest);
         System.out.println(posts.getPageable());
@@ -75,6 +79,7 @@ public class PostService {
      * @param userName
      * @throws SNSAppException
      */
+    @Transactional
     public void modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
@@ -88,6 +93,7 @@ public class PostService {
      * @param postId
      * @param userName
      */
+    @Transactional
     public void deletePost(Integer postId, String userName) {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
@@ -95,6 +101,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    @Transactional
     public List<PostReadResponse> getMyAllPost(String userName, PageRequest pageable) {
         User user = service.validateGetUserByUserName(userName);
         Page<Post> myFeeds = postRepository.findPostsByUser(user, pageable);

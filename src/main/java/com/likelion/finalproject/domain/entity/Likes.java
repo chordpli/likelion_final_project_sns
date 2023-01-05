@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -14,9 +13,9 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "LIKES")
+@Entity
 @SQLDelete(sql = "UPDATE likes SET deleted_at = current_timestamp WHERE id = ?")
-public class Like extends BaseEntity{
+public class Likes extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +29,8 @@ public class Like extends BaseEntity{
     @ManyToOne(fetch = LAZY)
     private Post post;
 
-    @Override
-    public void cancelDeletion() {
-        super.cancelDeletion();
-    }
-
-    public static Like toEntity(Post post, User user) {
-        return Like.builder()
+    public static Likes toEntity(Post post, User user) {
+        return Likes.builder()
                 .user(user)
                 .post(post)
                 .build();

@@ -1,13 +1,14 @@
 package com.likelion.finalproject.service;
 
 import com.likelion.finalproject.domain.entity.Alarm;
-import com.likelion.finalproject.domain.entity.Like;
+import com.likelion.finalproject.domain.entity.Likes;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.repository.AlarmRepository;
 import com.likelion.finalproject.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,22 +20,23 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final AlarmRepository alarmRepository;
-    private final Services service;
+    private final ValidateService service;
 
+    @Transactional
     public String increaseLike(Integer postId, String userName) {
         Post post = service.validateGetPostById(postId);
         User user = service.validateGetUserByUserName(userName);
 
-        Optional<Like> optionalLike = likeRepository.findLikeByUserAndPost(user, post);
-        Like like;
+        Optional<Likes> optionalLike = likeRepository.findLikeByUserAndPost(user, post);
+        Likes like;
 
         // 좋아요 기록이 있는지 확인합니다.
         if (optionalLike.isPresent()) {
             like = optionalLike.get();
         } else {
             // 좋아요 기록이 없다면 처음 좋아요를 누른 것이므로 좋아요 기록을 저장합니다.
-            like = likeRepository.save(Like.toEntity(post, user));
-            Optional<Like> checkLike = likeRepository.findById(like.getId());
+            like = likeRepository.save(Likes.toEntity(post, user));
+            Optional<Likes> checkLike = likeRepository.findById(like.getId());
 
             // 좋아요 기록이 DB에 잘 저장되었다면, Alarm을 보냅니다.
             if (checkLike.isPresent()) {

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.likelion.finalproject.domain.enums.UserRole.ADMIN;
 import static com.likelion.finalproject.exception.ErrorCode.*;
@@ -26,6 +27,7 @@ public class UserService{
 
     private long expireTimeMs = 1000 * 60 * 60;
 
+    @Transactional
     public UserJoinResponse join(UserJoinRequest dto) {
         userRepository.findByUserName(dto.getUserName())
                 .ifPresent(user -> {
@@ -36,6 +38,7 @@ public class UserService{
         return new UserJoinResponse(savedUser.getId(), savedUser.getUserName());
     }
 
+    @Transactional
     public UserLoginResponse login(UserLoginRequest dto) {
         // 유저가 있는지 확인
         User user = userRepository.findByUserName(dto.getUserName())
@@ -54,6 +57,7 @@ public class UserService{
                 .build();
     }
 
+    @Transactional
     public UserSwithResponse changeUserRoleToAdmin(Integer userId, String name) {
         log.info("service toAdmin userId ={}", userId);
         // 해당 유저가 있는지 확인

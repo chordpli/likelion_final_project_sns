@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
     /* 사용할 일이 없으므로 설계상 추상클래스로 만드는 것이 실수를 방지할 수 있다 */
 
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;

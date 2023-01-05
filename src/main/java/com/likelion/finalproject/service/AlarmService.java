@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +18,9 @@ import java.util.stream.Collectors;
 public class AlarmService {
 
     private final AlarmRepository alarmRepository;
-    private final Services service;
+    private final ValidateService service;
 
+    @Transactional
     public List<AlarmResponse> getMyAlarms(String userName, PageRequest pageable) {
         User user = service.validateGetUserByUserName(userName);
 

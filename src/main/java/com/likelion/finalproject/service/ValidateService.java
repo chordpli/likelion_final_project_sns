@@ -4,9 +4,7 @@ import com.likelion.finalproject.domain.entity.Comment;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
-import com.likelion.finalproject.repository.CommentRepository;
-import com.likelion.finalproject.repository.PostRepository;
-import com.likelion.finalproject.repository.UserRepository;
+import com.likelion.finalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +15,7 @@ import static com.likelion.finalproject.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
-public class Services {
+public class ValidateService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;

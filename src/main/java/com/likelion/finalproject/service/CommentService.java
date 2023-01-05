@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,9 +24,10 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final AlarmRepository alarmRepository;
-    private final Services service;
+    private final ValidateService service;
 
 
+    @Transactional
     public CommentWriteResponse writeComment(Integer postId, CommentRequest requset, String userName) {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
@@ -39,6 +41,7 @@ public class CommentService {
         return CommentWriteResponse.of(savedComment);
     }
 
+    @Transactional
     public CommentModifyResponse modifyComment(Integer postId, Integer id, CommentRequest request, String userName) {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
@@ -50,6 +53,7 @@ public class CommentService {
         return CommentModifyResponse.of(commentRepository.save(comment));
     }
 
+    @Transactional
     public CommentDeleteResponse deleteComment(Integer postId, Integer id, String userName) {
         Post post = service.validateGetPostById(postId);
         User user = service.validateGetUserByUserName(userName);
@@ -60,6 +64,7 @@ public class CommentService {
         return new CommentDeleteResponse("댓글 삭제 완료", id);
     }
 
+    @Transactional
     public List<CommentReadResponse> getAllComments(PageRequest pageable, Integer postId) {
         Post post = service.validateGetPostById(postId);
 
