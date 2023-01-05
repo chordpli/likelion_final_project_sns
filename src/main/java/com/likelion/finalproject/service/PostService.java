@@ -31,6 +31,7 @@ public class PostService {
 
     /**
      * dto의 내용으로 userName 사용자의 게시글을 작성합니다.
+     *
      * @param dto
      * @param userName
      * @return
@@ -52,6 +53,7 @@ public class PostService {
 
     /**
      * 작성된 게시글을 상세 조회 합니다.
+     *
      * @param postId
      * @return
      */
@@ -63,6 +65,7 @@ public class PostService {
 
     /**
      * 작성된 모든 게시글을 불러옵니다.
+     *
      * @param pageRequest
      * @return
      */

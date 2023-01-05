@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @SQLDelete(sql = "UPDATE likes SET deleted_at = current_timestamp WHERE id = ?")
-public class Likes extends BaseEntity{
+public class Likes extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,6 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
-import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.service.LikesService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Builder
+@Getter
+@Builder
 public class PostReadResponse {
     private Integer id;
     private String title;

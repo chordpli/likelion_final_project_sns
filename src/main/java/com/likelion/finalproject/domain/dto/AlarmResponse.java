@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Builder
+@Getter
+@Builder
 public class AlarmResponse {
     private Integer id;
     private AlarmType alarmType;

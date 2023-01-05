@@ -1,7 +1,6 @@
 package com.likelion.finalproject.config;
 
 import com.likelion.finalproject.exception.ErrorCode;
-import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.service.UserService;
 import com.likelion.finalproject.utils.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;

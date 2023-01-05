@@ -18,7 +18,7 @@ import static com.likelion.finalproject.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService{
+public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
 
@@ -31,7 +31,7 @@ public class UserService{
     public UserJoinResponse join(UserJoinRequest dto) {
         userRepository.findByUserName(dto.getUserName())
                 .ifPresent(user -> {
-                    throw new SNSAppException(DUPLICATED_USER_NAME, DUPLICATED_USER_NAME.getMessage() );
+                    throw new SNSAppException(DUPLICATED_USER_NAME, DUPLICATED_USER_NAME.getMessage());
                 });
 
         User savedUser = userRepository.save(dto.toEntity(encoder.encode(dto.getPassword())));
@@ -62,7 +62,7 @@ public class UserService{
         log.info("service toAdmin userId ={}", userId);
         // 해당 유저가 있는지 확인
         User user = userRepository.findById(userId).orElseThrow(
-                ()-> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
+                () -> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
         );
 
         // 요청을 보낸 user가 존재하는지 확인

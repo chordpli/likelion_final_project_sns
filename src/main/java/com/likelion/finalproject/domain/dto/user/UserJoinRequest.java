@@ -10,7 +10,8 @@ import static com.likelion.finalproject.domain.enums.UserRole.USER;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class UserJoinRequest {
     private String userName;
     private String password;

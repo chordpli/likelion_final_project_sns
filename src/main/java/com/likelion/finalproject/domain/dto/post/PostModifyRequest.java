@@ -13,7 +13,7 @@ public class PostModifyRequest {
     private String title;
     private String body;
 
-    public Post toEntity(Integer postId, User user){
+    public Post toEntity(Integer postId, User user) {
         return Post.builder()
                 .id(postId)
                 .title(this.title)

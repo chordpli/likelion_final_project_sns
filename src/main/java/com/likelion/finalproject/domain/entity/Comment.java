@@ -6,7 +6,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
@@ -20,7 +19,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @SQLDelete(sql = "UPDATE comment SET deleted_at = current_timestamp WHERE id = ?")
 @Where(clause = "deleted_at is null")
-public class Comment extends BaseEntity{
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

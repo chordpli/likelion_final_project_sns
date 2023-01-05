@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Builder
+@Getter
+@Builder
 public class CommentReadResponse {
     private Integer id;
     private String comment;

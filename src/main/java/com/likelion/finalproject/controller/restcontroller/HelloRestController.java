@@ -16,17 +16,17 @@ public class HelloRestController {
     private final HelloService helloService;
 
     @GetMapping("/hello")
-    public ResponseEntity<String> index(){
+    public ResponseEntity<String> index() {
         return ResponseEntity.ok().body("김준호");
     }
 
     @GetMapping("/hello/{num}")
-    public int index(@PathVariable int num){
+    public int index(@PathVariable int num) {
         return helloService.sumOfDigit(num);
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> test(){
+    public ResponseEntity<String> test() {
         return ResponseEntity.ok().body("test2");
     }
 }

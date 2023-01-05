@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Alarm extends BaseEntity{
+public class Alarm extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

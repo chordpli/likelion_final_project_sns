@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController {
 
     @GetMapping()
-    public String index(){
+    public String index() {
         log.info("main index");
         return "index";
     }

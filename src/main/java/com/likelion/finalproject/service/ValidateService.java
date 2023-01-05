@@ -4,7 +4,9 @@ import com.likelion.finalproject.domain.entity.Comment;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
-import com.likelion.finalproject.repository.*;
+import com.likelion.finalproject.repository.CommentRepository;
+import com.likelion.finalproject.repository.PostRepository;
+import com.likelion.finalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
