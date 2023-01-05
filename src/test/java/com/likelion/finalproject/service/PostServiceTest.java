@@ -17,12 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class PostServiceTest {
     private PostService postService;
@@ -30,10 +30,12 @@ class PostServiceTest {
     private PostRepository postRepository = mock(PostRepository.class);
     private UserRepository userRepository = mock(UserRepository.class);
 
+    private ValidateService services = mock(ValidateService.class);
+
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, userRepository);
+        postService = new PostService(postRepository, userRepository, services);
     }
 
     /* 포스트 상세 */

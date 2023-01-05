@@ -1,7 +1,41 @@
 package com.likelion.finalproject.controller.restcontroller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.finalproject.service.LikeService;
+import com.likelion.finalproject.utils.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
+@WebMvcTest(LikeRestController.class)
+@WithMockUser
 class LikeRestControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @MockBean
+    LikeService likeService;
+
+    private String token;
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    public final LocalDateTime time = LocalDateTime.now();
+
+    @BeforeEach()
+    public void getToken() {
+        long expireTimeMs = 1000 * 60 * 60;
+        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+    }
 
 }

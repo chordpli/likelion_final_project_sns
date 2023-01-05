@@ -1,7 +1,6 @@
-package com.likelion.finalproject.controller;
+package com.likelion.finalproject.controller.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.finalproject.controller.restcontroller.UserRestController;
 import com.likelion.finalproject.domain.dto.*;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
@@ -33,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserRestController.class)
 @WithMockUser
-class UserControllerTest {
+class UserRestControllerTest {
     @Autowired
     MockMvc mockMvc;
 

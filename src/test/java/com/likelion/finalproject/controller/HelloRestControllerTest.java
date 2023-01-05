@@ -1,6 +1,7 @@
-package com.likelion.finalproject.controller.restcontroller;
+package com.likelion.finalproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.finalproject.controller.restcontroller.HelloRestController;
 import com.likelion.finalproject.service.HelloService;
 import com.likelion.finalproject.service.UserService;
 import net.bytebuddy.NamingStrategy;
