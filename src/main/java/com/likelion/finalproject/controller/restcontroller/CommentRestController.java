@@ -1,7 +1,7 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
-import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.dto.comment.*;
 import com.likelion.finalproject.service.CommentService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

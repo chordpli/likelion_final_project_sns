@@ -1,4 +1,4 @@
-package com.likelion.finalproject.domain.dto;
+package com.likelion.finalproject.domain.dto.user;
 
 import com.likelion.finalproject.domain.entity.User;
 import lombok.AllArgsConstructor;

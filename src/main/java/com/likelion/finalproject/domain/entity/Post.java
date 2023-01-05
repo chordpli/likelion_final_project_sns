@@ -1,6 +1,6 @@
 package com.likelion.finalproject.domain.entity;
 
-import com.likelion.finalproject.domain.dto.PostReadResponse;
+import com.likelion.finalproject.domain.dto.post.PostReadResponse;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;

@@ -1,4 +1,4 @@
-package com.likelion.finalproject.domain.dto;
+package com.likelion.finalproject.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-public class PostRequest {
-    private String title;
-    private String body;
+@Getter @Builder
+public class UserLoginResponse {
+    private String jwt;
 }

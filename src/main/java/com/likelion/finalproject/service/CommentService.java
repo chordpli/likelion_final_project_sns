@@ -1,6 +1,6 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.dto.comment.*;
 import com.likelion.finalproject.domain.entity.Alarm;
 import com.likelion.finalproject.domain.entity.Comment;
 import com.likelion.finalproject.domain.entity.Post;

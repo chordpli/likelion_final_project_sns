@@ -1,8 +1,8 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.dto.PostModifyRequest;
-import com.likelion.finalproject.domain.dto.PostReadResponse;
-import com.likelion.finalproject.domain.dto.PostRequest;
+import com.likelion.finalproject.domain.dto.post.PostModifyRequest;
+import com.likelion.finalproject.domain.dto.post.PostReadResponse;
+import com.likelion.finalproject.domain.dto.post.PostRequest;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
@@ -10,6 +10,8 @@ import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.fixture.PostFixture;
 import com.likelion.finalproject.fixture.UserFixture;
+import com.likelion.finalproject.repository.CommentRepository;
+import com.likelion.finalproject.repository.LikesRepository;
 import com.likelion.finalproject.repository.PostRepository;
 import com.likelion.finalproject.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -31,11 +33,12 @@ class PostServiceTest {
     private UserRepository userRepository = mock(UserRepository.class);
 
     private ValidateService services = mock(ValidateService.class);
-
+    private LikesRepository likesRepository = mock(LikesRepository.class);
+    private CommentRepository commentRepository = mock(CommentRepository.class);
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, userRepository, services);
+        postService = new PostService(postRepository, userRepository, likesRepository, commentRepository, services);
     }
 
     /* 포스트 상세 */

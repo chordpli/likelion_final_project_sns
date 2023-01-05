@@ -1,7 +1,10 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.likelion.finalproject.domain.Response;
-import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.dto.post.PostModifyRequest;
+import com.likelion.finalproject.domain.dto.post.PostReadResponse;
+import com.likelion.finalproject.domain.dto.post.PostRequest;
+import com.likelion.finalproject.domain.dto.post.PostResponse;
 import com.likelion.finalproject.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

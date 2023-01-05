@@ -1,6 +1,5 @@
-package com.likelion.finalproject.domain.dto;
+package com.likelion.finalproject.domain.dto.user;
 
-import com.likelion.finalproject.domain.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserSwithResponse {
-
+public class UserLoginRequest {
     private String userName;
-    private UserRole userRole;
+    private String password;
 }

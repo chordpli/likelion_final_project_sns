@@ -1,4 +1,4 @@
-package com.likelion.finalproject.domain.dto;
+package com.likelion.finalproject.domain.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.likelion.finalproject.domain.entity.Post;

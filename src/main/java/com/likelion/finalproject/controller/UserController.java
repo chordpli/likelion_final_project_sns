@@ -1,15 +1,16 @@
 package com.likelion.finalproject.controller;
 
 import com.likelion.finalproject.domain.Response;
-import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.dto.user.UserJoinRequest;
+import com.likelion.finalproject.domain.dto.user.UserLoginRequest;
+import com.likelion.finalproject.domain.dto.user.UserLoginResponse;
+import com.likelion.finalproject.domain.dto.user.UserSwithResponse;
 import com.likelion.finalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/users")

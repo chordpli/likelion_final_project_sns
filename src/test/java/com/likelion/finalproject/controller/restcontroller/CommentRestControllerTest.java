@@ -1,10 +1,10 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.finalproject.domain.dto.CommentDeleteResponse;
-import com.likelion.finalproject.domain.dto.CommentModifyResponse;
-import com.likelion.finalproject.domain.dto.CommentRequest;
-import com.likelion.finalproject.domain.dto.CommentWriteResponse;
+import com.likelion.finalproject.domain.dto.comment.CommentDeleteResponse;
+import com.likelion.finalproject.domain.dto.comment.CommentModifyResponse;
+import com.likelion.finalproject.domain.dto.comment.CommentRequest;
+import com.likelion.finalproject.domain.dto.comment.CommentWriteResponse;
 import com.likelion.finalproject.domain.entity.Comment;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
@@ -13,8 +13,6 @@ import com.likelion.finalproject.fixture.CommentFixture;
 import com.likelion.finalproject.fixture.PostFixture;
 import com.likelion.finalproject.fixture.UserFixture;
 import com.likelion.finalproject.service.CommentService;
-import com.likelion.finalproject.service.PostService;
-import com.likelion.finalproject.service.UserService;
 import com.likelion.finalproject.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

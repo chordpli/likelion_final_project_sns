@@ -1,9 +1,9 @@
 package com.likelion.finalproject.service;
 
-import com.likelion.finalproject.domain.dto.PostModifyRequest;
-import com.likelion.finalproject.domain.dto.PostReadResponse;
-import com.likelion.finalproject.domain.dto.PostRequest;
-import com.likelion.finalproject.domain.dto.PostResponse;
+import com.likelion.finalproject.domain.dto.post.PostModifyRequest;
+import com.likelion.finalproject.domain.dto.post.PostReadResponse;
+import com.likelion.finalproject.domain.dto.post.PostRequest;
+import com.likelion.finalproject.domain.dto.post.PostResponse;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;

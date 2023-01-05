@@ -1,7 +1,7 @@
 package com.likelion.finalproject.controller.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.finalproject.domain.dto.*;
+import com.likelion.finalproject.domain.dto.user.*;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.SNSAppException;

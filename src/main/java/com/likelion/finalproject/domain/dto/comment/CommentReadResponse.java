@@ -1,4 +1,4 @@
-package com.likelion.finalproject.domain.dto;
+package com.likelion.finalproject.domain.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
