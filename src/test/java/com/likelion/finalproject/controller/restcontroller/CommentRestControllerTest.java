@@ -302,6 +302,82 @@ class CommentRestControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("댓글 삭제 실패 - 인증 실패")
+    void fail_delete_comment_certification() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+        Post post = PostFixture.get(user);
+        Comment comment = CommentFixture.get(user, post);
+
+        given(commentService.deleteComment(any(), any(), any())).willThrow(new SNSAppException(INVALID_TOKEN, INVALID_TOKEN.getMessage()));
+
+        String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
+
+        mockMvc.perform(delete(url).with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1)))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 - 댓글 불일치")
+    void fail_delete_comment_mismatch_comment() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+        Post post = PostFixture.get(user);
+        Comment comment = CommentFixture.get(user, post);
+
+        given(commentService.deleteComment(any(), any(), any())).willThrow(new SNSAppException(MISMATCH_COMMENT, MISMATCH_COMMENT.getMessage()));
+
+        String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
+
+        mockMvc.perform(delete(url).with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1)))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 - 작성자 불일치")
+    void fail_delete_comment_mismatch_writer() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+        Post post = PostFixture.get(user);
+        Comment comment = CommentFixture.get(user, post);
+
+        given(commentService.deleteComment(any(), any(), any())).willThrow(new SNSAppException(MISMATCH_USER, MISMATCH_USER.getMessage()));
+
+        String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
+
+        mockMvc.perform(delete(url).with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1)))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 - 데이터베이스 에러")
+    void fail_delete_comment_db_error() throws Exception {
+        User user = UserFixture.get("chordpli", "1234");
+        Post post = PostFixture.get(user);
+        Comment comment = CommentFixture.get(user, post);
+
+        given(commentService.deleteComment(any(), any(), any())).willThrow(new SNSAppException(DATABASE_ERROR, DATABASE_ERROR.getMessage()));
+
+        String url = String.format("/api/v1/posts/%d/comments/%d", post.getId(), comment.getId());
+
+        mockMvc.perform(delete(url).with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1)))
+                .andExpect(status().isInternalServerError())
+                .andDo(print());
+    }
+
     /* 댓글 조회 */
     @Test
     @DisplayName("댓글 조회 성공")
@@ -312,12 +388,6 @@ class CommentRestControllerTest {
         mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andDo(print());
-
-/*        ArgumentCaptor<PageRequest> pageableCaptor = ArgumentCaptor.forClass(PageRequest.class);
-        verify(postService).getAllPost(pageableCaptor.capture());
-        PageRequest pageable = (PageRequest) pageableCaptor.getValue();
-
-        assertEquals(Sort.by(DESC, "createdAt"), pageable.getSort());*/
     }
 
 }
