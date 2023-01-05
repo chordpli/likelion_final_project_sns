@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@ApiIgnore
 public class UserController {
 
     private final UserService userService;

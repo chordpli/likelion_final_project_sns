@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping("/api/v1/")
 @RestController
 @RequiredArgsConstructor
+@ApiIgnore
 public class HelloRestController {
 
     private final HelloService helloService;

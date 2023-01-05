@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 @Slf4j
+@ApiIgnore
 public class IndexController {
 
     @GetMapping()
