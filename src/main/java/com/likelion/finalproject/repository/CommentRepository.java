@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     Page<Comment> findCommentsByPost(Post post, Pageable pageable);
+
+    void deleteAllByPost(Post post);
 }

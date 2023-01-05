@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final LikesRepository likeRepository;
+    private final LikesRepository likesRepository;
     private final CommentRepository commentRepository;
     private final ValidateService service;
 
@@ -102,7 +102,7 @@ public class PostService {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
         service.validateCheckAdminAndEqualWriter(user, post);
-        commentRepository.
+        commentRepository.deleteAllByPost(post);
         likesRepository.deleteAllByPost(post);
         postRepository.delete(post);
     }
