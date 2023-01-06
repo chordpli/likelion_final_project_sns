@@ -1,7 +1,18 @@
 # Likelion Final Personal Project - SNS 
 
+## 프로젝트 기술스택
+
+- 자바 : JAVA 11
+- 개발 툴 : SpringBoot 2.7.6
+- 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security, JWT, Swagger
+- IDE : Intellij Ultimate
+- 빌드 : Gradle 7.4
+- DB : MySql
+- CLOUD : AWS EC2
+- CI/CD : Docker, GitLab
+
 ## API 체크리스트
-http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
+### [SWAGGER](http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/)
 
 | 분류      |  HTTP  | URL                                      |    설명     | 구현 완료 |
 |---------|:------:|:-----------------------------------------|:---------:|:-----:|
@@ -35,7 +46,7 @@ http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/
 
 ## ERD
-![erd2](https://user-images.githubusercontent.com/101695482/209633615-ee1af6f9-716d-4cb5-8177-10f06a7e1546.png){: width="30%" height="30%"}
+![erd2](https://user-images.githubusercontent.com/101695482/211044249-472720f4-c0a1-42fd-a8f5-e885deba9da1.png){: width="30%" height="30%"}
 
 ## 1주차 미션 요약 구현 과정
 ### [개요](https://chordplaylist.tistory.com/198)
@@ -61,8 +72,7 @@ http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/
 - 테스트 코드만 약 1000줄가량 작성하게 되었는데, 작성한 코드 내에 어노테이션, Junit과 관련된 메서드에 대해 익숙해졌다.
 
 ## Config
-### 배포 부터 CI-CD
-https://chordplaylist.tistory.com/201
+### [배포 부터 CI-CD](https://chordplaylist.tistory.com/201)
 - 가장 막막했던 첫 날 작업.
   - 배포 스크립트 작성, 크론탭 설정이 가장 복잡했으나 하나하나 다시 실습하고 블로그 작성하여 수월하게 작성할 수 있는 수준으로 끌어올림.
     - EC2 프리티어를 사용했지만, 계속 DB가 내려가는 현상이 발생하여 EC2 t3.small로 다시 생성 후 배포 스크립트 작성, 크론탭 설정 완료.
@@ -83,10 +93,15 @@ https://chordplaylist.tistory.com/201
 
 ## 2주차 미션 요약 구현 과정
 ### [개요](https://chordplaylist.tistory.com/232)
+### Comment
+#### [Comment 작성 및 수정 / Test](https://chordplaylist.tistory.com/231)
+#### [Comment 조회 및 삭제 / Test](https://chordplaylist.tistory.com/234)
+### [Like 좋아요 누르기, 좋아요 개수 Count](https://chordplaylist.tistory.com/235)
 
 
 ## 2주차 미션 중 이슈 정리
-
+### [MySQL 예약어 이슈](https://chordplaylist.tistory.com/236)
+### [테스트 코드 생성자 이슈](https://chordplaylist.tistory.com/233)
 
 ## 회고
 ### 리팩토링
