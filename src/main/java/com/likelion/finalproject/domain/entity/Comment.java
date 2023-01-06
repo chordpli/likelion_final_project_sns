@@ -7,7 +7,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -34,8 +33,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     @ManyToOne(fetch = LAZY)
     private Post post;
-
-    private LocalDateTime deletedAt;
 
     public static Comment toEntity(User user, Post post, CommentRequest request) {
         return Comment.builder()
