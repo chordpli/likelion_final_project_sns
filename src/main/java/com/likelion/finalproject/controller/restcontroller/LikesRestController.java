@@ -30,5 +30,3 @@ public class LikesRestController {
         return Response.success(likeService.getLikeCount(postId));
     }
 }
-
-
