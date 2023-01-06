@@ -20,6 +20,7 @@ import static com.likelion.finalproject.exception.ErrorCode.*;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final ValidateService validateService;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.secret}")
@@ -27,36 +28,51 @@ public class UserService {
 
     private long expireTimeMs = 1000 * 60 * 60;
 
+    /**
+     * request에 담긴 가입 정보로 회원가입을 진행하는 메서드
+     *
+     * @param request 가입하는 회원의 정보를 담은 dto
+     * @return UserJoinResponse
+     */
     @Transactional
-    public UserJoinResponse join(UserJoinRequest dto) {
-        userRepository.findByUserName(dto.getUserName())
-                .ifPresent(user -> {
-                    throw new SNSAppException(DUPLICATED_USER_NAME, DUPLICATED_USER_NAME.getMessage());
-                });
+    public UserJoinResponse join(UserJoinRequest request) {
+        validateService.validateDuplicatedUser(request);
 
-        User savedUser = userRepository.save(dto.toEntity(encoder.encode(dto.getPassword())));
+        User savedUser = userRepository.save(request.toEntity(encoder.encode(request.getPassword())));
         return new UserJoinResponse(savedUser.getId(), savedUser.getUserName());
     }
 
+
+    /**
+     * request에 담긴 회원 정보로 로그인을 진행하는 메서드
+     *
+     * @param request 로그인하려는 회원의 정보를 담은 dto
+     * @return Token이 담겨있는 UserLoginResponse 반환
+     */
     @Transactional
-    public UserLoginResponse login(UserLoginRequest dto) {
+    public UserLoginResponse login(UserLoginRequest request) {
         // 유저가 있는지 확인
-        User user = userRepository.findByUserName(dto.getUserName())
-                .orElseThrow(
-                        () -> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
-                );
+        User user = validateService.validateGetExistingUser(request);
 
         // 비밀번호가 일치하는지 확인
-        if (!encoder.matches(dto.getPassword(), user.getPassword())) {
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new SNSAppException(INVALID_PASSWORD, INVALID_PASSWORD.getMessage());
         }
 
         // 토큰 리턴
         return UserLoginResponse.builder()
-                .jwt(JwtUtil.createJwt(dto.getUserName(), secretKey, expireTimeMs))
+                .jwt(JwtUtil.createJwt(request.getUserName(), secretKey, expireTimeMs))
                 .build();
     }
 
+
+    /**
+     * 관리자 회원이 특정 회원을 ADMIN(관리자)로 권한을 변경하는 메서드
+     *
+     * @param userId 권한을 변경 받는 USER
+     * @param name 관리자 ADMIN
+     * @return
+     */
     @Transactional
     public UserSwithResponse changeUserRoleToAdmin(Integer userId, String name) {
         log.info("service toAdmin userId ={}", userId);
@@ -66,9 +82,7 @@ public class UserService {
         );
 
         // 요청을 보낸 user가 존재하는지 확인
-        User admin = userRepository.findByUserName(name).orElseThrow(
-                () -> new SNSAppException(USERNAME_NOT_FOUND, USERNAME_NOT_FOUND.getMessage())
-        );
+        User admin = validateService.validateGetUserByUserName(name);
 
         // 해당 유저가 관리자인지 확인
         if (!admin.getUserRole().equals(ADMIN)) {

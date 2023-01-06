@@ -30,21 +30,21 @@ public class PostService {
     private final ValidateService service;
 
     /**
-     * dto의 내용으로 userName 사용자의 게시글을 작성합니다.
+     * request 의 내용으로 userName 사용자의 게시글을 작성합니다.
      *
-     * @param dto
-     * @param userName
-     * @return
+     * @param request PostRequest DTO
+     * @param userName Authentication에서 추출한 userName
+     * @return PostResponse로 return
      */
     @Transactional
-    public PostResponse post(PostRequest dto, String userName) {
+    public PostResponse post(PostRequest request, String userName) {
         // user가 찾아지지 않는다면 등록할 수 없다.
         User user = service.validateGetUserByUserName(userName);
 
         Post post = Post.builder()
                 .user(user)
-                .title(dto.getTitle())
-                .body(dto.getBody())
+                .title(request.getTitle())
+                .body(request.getBody())
                 .build();
 
         postRepository.save(post);
@@ -79,19 +79,19 @@ public class PostService {
     }
 
     /**
-     * 해당 postId를 갖고 있는 Post를 dto의 내용대로 수정합니다.
+     * 해당 postId를 갖고 있는 Post를 request의 내용대로 수정합니다.
      *
      * @param postId
-     * @param dto
+     * @param request
      * @param userName
      * @throws SNSAppException
      */
     @Transactional
-    public void modifyPost(Integer postId, PostModifyRequest dto, String userName) throws SNSAppException {
+    public void modifyPost(Integer postId, PostModifyRequest request, String userName) throws SNSAppException {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
         service.validateCheckAdminAndEqualWriter(user, post);
-        postRepository.save(dto.toEntity(postId, post.getUser()));
+        postRepository.save(request.toEntity(postId, post.getUser()));
     }
 
     /**
@@ -110,6 +110,13 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    /**
+     * 내가 작성한 모든 게시물을 불러옵니다.
+     *
+     * @param userName
+     * @param pageable
+     * @return List<PostReadResponse>
+     */
     @Transactional
     public List<PostReadResponse> getMyAllPost(String userName, PageRequest pageable) {
         User user = service.validateGetUserByUserName(userName);

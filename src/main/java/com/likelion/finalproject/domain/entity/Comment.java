@@ -1,6 +1,7 @@
 package com.likelion.finalproject.domain.entity;
 
 import com.likelion.finalproject.domain.dto.comment.CommentReadResponse;
+import com.likelion.finalproject.domain.dto.comment.CommentRequest;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -36,6 +37,18 @@ public class Comment extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
+    public static Comment toEntity(User user, Post post, CommentRequest request) {
+        return Comment.builder()
+                .user(user)
+                .post(post)
+                .comment(request.getComment())
+                .build();
+    }
+
+    /**
+     * 기존 코멘트 내용을 comment로 수정합니다.
+     * @param comment 수정할 comment 문자열
+     */
     public void update(String comment) {
         this.comment = comment;
     }

@@ -22,6 +22,15 @@ public class LikesService {
     private final AlarmRepository alarmRepository;
     private final ValidateService service;
 
+    /**
+     * 좋아요 상태를 변경하는 메서드
+     * 좋아요를 누른 상태가 아니라면 좋아요를 증가시킵니다.
+     * 좋아요를 누른 상태라면 좋아요를 취소합니다.(감소합니다)
+     *
+     * @param postId 좋아요를 누른 게시물 id
+     * @param userName 좋아요를 누른 user
+     * @return
+     */
     @Transactional
     public String increaseLike(Integer postId, String userName) {
         Post post = service.validateGetPostById(postId);
@@ -66,6 +75,12 @@ public class LikesService {
         }
     }
 
+    /**
+     * 좋아요 수를 세는 메서드
+     *
+     * @param postId 좋아요 수를 확인할 게시물의 id
+     * @return 좋아요 수를 반환합니다.
+     */
     public int getLikeCount(Integer postId) {
         Post post = service.validateGetPostById(postId);
         return likeRepository.countLikesByPost(post);

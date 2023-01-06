@@ -20,6 +20,12 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final ValidateService service;
 
+    /**
+     * userName을 가지고 있는 user의 Alarm을 확인합니다.
+     * @param userName 요청을 보낸 user
+     * @param pageable 페이징 정보를 담고 있음.
+     * @return
+     */
     @Transactional
     public List<AlarmResponse> getMyAlarms(String userName, PageRequest pageable) {
         User user = service.validateGetUserByUserName(userName);
