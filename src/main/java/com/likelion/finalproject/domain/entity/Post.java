@@ -6,6 +6,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -30,6 +31,12 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Comment> comment;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Likes> Likes;
 
     public PostReadResponse toResponse() {
         return PostReadResponse.builder()

@@ -105,8 +105,8 @@ public class PostService {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
         service.validateCheckAdminAndEqualWriter(user, post);
-        commentRepository.deleteAllByPost(post);
-        likesRepository.deleteAllByPost(post);
+        //commentRepository.deleteAllByPost(post);
+        //likesRepository.deleteAllByPost(post);
         postRepository.delete(post);
     }
 
