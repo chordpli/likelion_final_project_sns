@@ -61,9 +61,11 @@ public class CommentService {
         Comment comment = service.validateGetCommentById(id);
         service.validateMatchUsers(user, comment);
 
-        comment.update(request.getComment());
+        commentRepository.update(request.getComment(), comment.getId());
 
-        return CommentModifyResponse.of(commentRepository.save(comment));
+        // comment.update(request.getComment());
+        //return CommentModifyResponse.of(commentRepository.save(comment));
+        return CommentModifyResponse.of(comment);
     }
 
     /**
