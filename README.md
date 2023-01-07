@@ -97,11 +97,14 @@ http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/
 #### [Comment 작성 및 수정 / Test](https://chordplaylist.tistory.com/231)
 #### [Comment 조회 및 삭제 / Test](https://chordplaylist.tistory.com/234)
 ### [Like 좋아요 누르기, 좋아요 개수 Count](https://chordplaylist.tistory.com/235)
+### [Alarm 기능 개발](https://chordplaylist.tistory.com/238)
 
 
 ## 2주차 미션 중 이슈 정리
 ### [MySQL 예약어 이슈](https://chordplaylist.tistory.com/236)
 ### [테스트 코드 생성자 이슈](https://chordplaylist.tistory.com/233)
+### [MySQL CURRENT_TIMESTAMP 시간 이슈](https://chordplaylist.tistory.com/241)
+### [JPA @OneToMany, cascade, orphanRemoval 이슈](https://chordplaylist.tistory.com/242)
 
 ## 회고
 ### 리팩토링
