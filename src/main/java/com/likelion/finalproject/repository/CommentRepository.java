@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     Page<Comment> findCommentsByPost(Post post, Pageable pageable);
 
@@ -17,4 +19,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     void update(@Param("comment") String comment, @Param("commentId") Integer id) ;
 
     void deleteAllByPost(Post post);
+
+    List<Comment> findAllByPost(Post post);
 }

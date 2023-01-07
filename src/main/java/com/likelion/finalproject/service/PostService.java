@@ -4,6 +4,8 @@ import com.likelion.finalproject.domain.dto.post.PostModifyRequest;
 import com.likelion.finalproject.domain.dto.post.PostReadResponse;
 import com.likelion.finalproject.domain.dto.post.PostRequest;
 import com.likelion.finalproject.domain.dto.post.PostResponse;
+import com.likelion.finalproject.domain.entity.Comment;
+import com.likelion.finalproject.domain.entity.Likes;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
@@ -91,7 +93,11 @@ public class PostService {
         User user = service.validateGetUserByUserName(userName);
         Post post = service.validateGetPostById(postId);
         service.validateCheckAdminAndEqualWriter(user, post);
-        postRepository.save(request.toEntity(postId, post.getUser()));
+
+        List<Comment> comment = commentRepository.findAllByPost(post);
+        List<Likes> likes = likesRepository.findAllByPost(post);
+
+        postRepository.save(request.toEntity(postId, post.getUser(), comment, likes));
     }
 
     /**
