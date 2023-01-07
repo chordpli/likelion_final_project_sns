@@ -36,7 +36,7 @@ public class Post extends BaseEntity {
     List<Comment> comment;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<Likes> Likes;
+    List<Likes> likes;
 
     public PostReadResponse toResponse() {
         return PostReadResponse.builder()

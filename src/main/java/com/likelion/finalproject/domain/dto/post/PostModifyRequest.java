@@ -24,7 +24,7 @@ public class PostModifyRequest {
                 .body(this.body)
                 .user(user)
                 .comment(comment)
-                .Likes(likes)
+                .likes(likes)
                 .build();
     }
 }
