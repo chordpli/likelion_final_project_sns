@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisDao {
@@ -14,14 +15,19 @@ public class RedisDao {
         this.redisTemplate = redisTemplate;
     }
 
-    public void setValues(String key, String data) {
+    public void setValues(String key, String value) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(key, data);
+        values.set(key, value);
     }
 
-    public void setValues(String key, String data, Duration duration) {
+    public void setValues(String key, String value, Duration duration) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(key, data, duration);
+        values.set(key, value, duration);
+    }
+
+    public void setValues(String key, String value, long timeout, TimeUnit unit) {
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+        values.set(key, value, timeout, unit);
     }
 
     public String getValues(String key) {
