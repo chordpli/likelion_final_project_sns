@@ -40,6 +40,8 @@ public class Alarm extends BaseEntity {
      */
     private Integer targetId; // podst id
 
+    private Integer commentId;
+
     private String text;
 
     public static Alarm toEntity(User user, Post post, AlarmType alarmType) {
@@ -49,6 +51,17 @@ public class Alarm extends BaseEntity {
                 .fromUserId(user.getId())
                 .targetId(post.getId())
                 .text(alarmType.getText())
+                .build();
+    }
+
+    public static Alarm toEntity(User user, Post post, AlarmType alarmType, Integer commentId) {
+        return Alarm.builder()
+                .user(post.getUser())
+                .alarmType(alarmType)
+                .fromUserId(user.getId())
+                .targetId(post.getId())
+                .text(alarmType.getText())
+                .commentId(commentId)
                 .build();
     }
 

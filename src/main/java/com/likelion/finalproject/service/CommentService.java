@@ -41,7 +41,7 @@ public class CommentService {
         Post post = service.validateGetPostById(postId);
         Comment savedComment = Comment.toEntity(user, post, request);
         commentRepository.save(savedComment);
-        alarmRepository.save(Alarm.toEntity(user, post, NEW_COMMENT_ON_POST));
+        alarmRepository.save(Alarm.toEntity(user, post, NEW_COMMENT_ON_POST, savedComment.getId()));
         return CommentWriteResponse.of(savedComment);
     }
 
@@ -83,6 +83,7 @@ public class CommentService {
         service.validateMatchUsers(user, comment);
 
         commentRepository.delete(comment);
+        alarmRepository.deleteAlarmByCommentId(id);
         return new CommentDeleteResponse("댓글 삭제 완료", id);
     }
 
