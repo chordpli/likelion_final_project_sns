@@ -5,6 +5,7 @@ import com.likelion.finalproject.domain.dto.user.*;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.domain.enums.UserRole;
 import com.likelion.finalproject.exception.SNSAppException;
+import com.likelion.finalproject.fixture.UserFixture;
 import com.likelion.finalproject.service.UserService;
 import com.likelion.finalproject.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,11 +47,13 @@ class UserRestControllerTest {
 
     @Value("${jwt.secret}")
     private String secretKey;
+    private String refreshToken;
 
     @BeforeEach()
     public void getToken() {
         long expireTimeMs = 1000 * 60 * 60;
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
+        refreshToken = JwtUtil.createRefreshJwt("chordpli", secretKey);
     }
 
     /* 회원가입 */
@@ -106,7 +109,7 @@ class UserRestControllerTest {
                 .build();
 
         UserLoginRequest dto = new UserLoginRequest(userDto.getUserName(), userDto.getPassword());
-        UserLoginResponse response = new UserLoginResponse(token);
+        UserLoginResponse response = new UserLoginResponse(token, refreshToken);
         given(userService.login(any())).willReturn(response);
 
         String url = "/api/v1/users/login";

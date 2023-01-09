@@ -50,6 +50,8 @@ class AlarmRestControllerTest {
     AlarmService alarmService;
 
     private String token;
+    private String refreshToken;
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -58,7 +60,8 @@ class AlarmRestControllerTest {
     @BeforeEach()
     public void getToken() {
         long expireTimeMs = 1000 * 60 * 60;
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
+        refreshToken = JwtUtil.createRefreshJwt("chordpli", secretKey);
     }
 
     @Test

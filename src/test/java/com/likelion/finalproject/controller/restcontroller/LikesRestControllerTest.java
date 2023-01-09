@@ -47,13 +47,15 @@ class LikesRestControllerTest {
     private String token;
     @Value("${jwt.secret}")
     private String secretKey;
+    private String refreshToken;
 
     public final LocalDateTime time = LocalDateTime.now();
 
     @BeforeEach()
     public void getToken() {
         long expireTimeMs = 1000 * 60 * 60;
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
+        refreshToken = JwtUtil.createRefreshJwt("chordpli", secretKey);
     }
 
     @Test
@@ -110,5 +112,4 @@ class LikesRestControllerTest {
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
-
 }

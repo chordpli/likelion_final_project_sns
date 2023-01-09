@@ -52,13 +52,15 @@ class CommentRestControllerTest {
     private String token;
     @Value("${jwt.secret}")
     private String secretKey;
+    private String refreshToken;
 
     public final LocalDateTime time = LocalDateTime.now();
 
     @BeforeEach()
     public void getToken() {
         long expireTimeMs = 1000 * 60 * 60;
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+        token = JwtUtil.createJwt(UserFixture.get("UserName", "1234"), secretKey);
+        refreshToken = JwtUtil.createRefreshJwt("chordpli", secretKey);
     }
 
     /* 코멘트 Comment */
@@ -276,7 +278,7 @@ class CommentRestControllerTest {
                 .andDo(print());
     }
 
-    /* 댓글 수정 */
+    /* 댓글 삭제 */
     @Test
     @DisplayName("댓글 삭제 성공")
     void success_delete_comment() throws Exception {

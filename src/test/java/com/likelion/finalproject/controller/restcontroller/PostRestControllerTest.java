@@ -56,15 +56,18 @@ class PostRestControllerTest {
     PostService postService;
 
     private String token;
+    private String refreshToken;
     @Value("${jwt.secret}")
     private String secretKey;
+
 
     public final LocalDateTime time = LocalDateTime.now();
 
     @BeforeEach()
     public void getToken() {
         long expireTimeMs = 1000 * 60 * 60;
-        token = JwtUtil.createJwt("chordpli", secretKey, System.currentTimeMillis() + expireTimeMs);
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
+        refreshToken = JwtUtil.createRefreshJwt("chordpli", secretKey);
     }
 
     /* 포스트 */
@@ -113,7 +116,7 @@ class PostRestControllerTest {
     @Test
     @DisplayName("포스트 작성 성공")
     void post_success() throws Exception {
-        UserLoginResponse user = new UserLoginResponse(token);
+        UserLoginResponse user = new UserLoginResponse(token, refreshToken);
 
         PostRequest dto = new PostRequest("title", "content");
         PostResponse response = new PostResponse("포스트 등록 완료.", 1);
@@ -160,7 +163,7 @@ class PostRestControllerTest {
     void post_fail_invalid_token() throws Exception {
         User user = UserFixture.get("chordpli", "1234");
         PostRequest dto = new PostRequest("title", "content");
-        token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
         given(postService.post(any(), any())).willThrow(new SNSAppException(INVALID_TOKEN, "유효하지 않은 토큰입니다."));
 
         String url = "/api/v1/posts";
@@ -179,7 +182,7 @@ class PostRestControllerTest {
     @DisplayName("포스트 수정 실패_인증 실패")
     void fail_post_modify_authentication_failed() throws Exception {
         User user = UserFixture.get("chordpli", "1234");
-        token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
         PostModifyRequest request = new PostModifyRequest("title", "content");
         willThrow(new SNSAppException(INVALID_PERMISSION, INVALID_PERMISSION.getMessage())).given(postService).modifyPost(any(), any(), any());
 
@@ -266,7 +269,7 @@ class PostRestControllerTest {
     @DisplayName("포스트 삭제 실패_인증 실패")
     void fail_post_delete_authentication_failed() throws Exception {
         User user = UserFixture.get("chordpli", "1234");
-        token = JwtUtil.createJwt(user.getUserName(), secretKey, System.currentTimeMillis());
+        token = JwtUtil.createJwt(UserFixture.get("chordpli", "1234"), secretKey);
         willThrow(new SNSAppException(INVALID_TOKEN, "유효하지 않은 토큰입니다.")).given(postService).deletePost(any(), any());
 
         Integer postId = 1;
