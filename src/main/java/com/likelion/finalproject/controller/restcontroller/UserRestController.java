@@ -38,4 +38,11 @@ public class UserRestController {
         UserLoginResponse loginUser = userService.login(dto);
         return Response.success(loginUser);
     }
+
+    @ApiOperation(value = "토큰 갱신")
+    @PostMapping("/reissue")
+    public UserLoginResponse reissue(UserReissue reissue, Authentication authentication) {
+        String userName = authentication.getName();
+        return userService.reissue(reissue, userName);
+    }
 }

@@ -3,6 +3,7 @@ package com.likelion.finalproject.service;
 import com.likelion.finalproject.config.redis.RedisDao;
 import com.likelion.finalproject.domain.dto.user.*;
 import com.likelion.finalproject.domain.entity.User;
+import com.likelion.finalproject.exception.ErrorCode;
 import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.UserRepository;
 import com.likelion.finalproject.utils.JwtUtil;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import static com.likelion.finalproject.domain.enums.UserRole.ADMIN;
 import static com.likelion.finalproject.exception.ErrorCode.*;
@@ -64,7 +66,7 @@ public class UserService {
         String token = JwtUtil.createJwt(user, secretKey);
         String refreshToken = JwtUtil.createRefreshJwt(user.getUserName(), secretKey);
 
-        redisDao.setValues("RTK:" + user.getUserName(), refreshToken);
+        redisDao.setValues("RT:" + user.getUserName(), refreshToken);
 
         // 토큰 리턴
         return UserLoginResponse.builder()
@@ -72,6 +74,37 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    public UserLoginResponse reissue(UserReissue reissue, String UserName) {
+        User user = validateService.validateGetUserByUserName(UserName);
+
+        // 1. Refresh Token 검증
+        if (!JwtUtil.isExpired(reissue.getRefreshToken(), secretKey)) {
+            throw new SNSAppException(INVALID_TOKEN, INVALID_TOKEN.getMessage());
+        }
+
+        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+        String refreshToken = (String)redisDao.getValues("RT:" + UserName);
+        // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
+        if(ObjectUtils.isEmpty(refreshToken)) {
+            throw new SNSAppException(ErrorCode.INVALID_REQUEST, INVALID_REQUEST.getMessage());
+        }
+        if(!refreshToken.equals(reissue.getRefreshToken())) {
+            throw new SNSAppException(INVALID_TOKEN, INVALID_TOKEN.getMessage());
+        }
+
+        // 4. 새로운 토큰 생성
+        String token = JwtUtil.createJwt(user, secretKey);
+
+        // 5. RefreshToken Redis 업데이트
+        redisDao.setValues("RT:" + user.getUserName(), refreshToken);
+
+        return UserLoginResponse.builder()
+                .jwt(token)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
 
 
     /**
