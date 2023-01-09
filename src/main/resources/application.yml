@@ -6,6 +6,11 @@ server:
 
 
 spring:
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    type: redis
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: localhost:3306/
@@ -22,9 +27,6 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     cache: false
-  redis:
-    host: localhost
-    port: 6479
 
 jwt:
   secret: secretKey
