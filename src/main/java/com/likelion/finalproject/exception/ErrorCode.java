@@ -21,7 +21,8 @@ public enum ErrorCode {
     MISMATCH_USER(HttpStatus.UNAUTHORIZED, "사용자가 일치하지 않습니다."),
     MISMATCH_COMMENT(HttpStatus.UNAUTHORIZED, "댓글이 일치하지 않습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 존재하지 않습니다."),
-    NOT_LOGGED_IN(HttpStatus.CONFLICT, "로그인 상태가 아닙니다.");
+    NOT_LOGGED_IN(HttpStatus.CONFLICT, "로그인 상태가 아닙니다."), 
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다" );
 
     private HttpStatus status;
     private String message;
