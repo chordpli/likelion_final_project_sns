@@ -1,5 +1,6 @@
 package com.likelion.finalproject.service;
 
+import com.likelion.finalproject.config.redis.RedisDao;
 import com.likelion.finalproject.domain.dto.user.*;
 import com.likelion.finalproject.domain.entity.User;
 import com.likelion.finalproject.exception.SNSAppException;
@@ -22,6 +23,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final ValidateService validateService;
     private final BCryptPasswordEncoder encoder;
+
+    private final RedisDao redisDao;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -58,10 +61,14 @@ public class UserService {
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new SNSAppException(INVALID_PASSWORD, INVALID_PASSWORD.getMessage());
         }
+        String token = JwtUtil.createJwt(user, secretKey);
+
+        //redisDao.setValues("RTK:" + user.getUserName(), JwtUtil.createRefreshJwt(user.getUserName(), secretKey));
 
         // 토큰 리턴
         return UserLoginResponse.builder()
-                .jwt(JwtUtil.createJwt(request.getUserName(), secretKey, expireTimeMs))
+                .jwt(token)
+                .refreshToken(token)
                 .build();
     }
 
