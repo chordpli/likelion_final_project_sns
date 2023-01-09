@@ -62,13 +62,14 @@ public class UserService {
             throw new SNSAppException(INVALID_PASSWORD, INVALID_PASSWORD.getMessage());
         }
         String token = JwtUtil.createJwt(user, secretKey);
+        String refreshToken = JwtUtil.createRefreshJwt(user.getUserName(), secretKey);
 
-        //redisDao.setValues("RTK:" + user.getUserName(), JwtUtil.createRefreshJwt(user.getUserName(), secretKey));
+        redisDao.setValues("RTK:" + user.getUserName(), refreshToken);
 
         // 토큰 리턴
         return UserLoginResponse.builder()
                 .jwt(token)
-                .refreshToken(token)
+                .refreshToken(refreshToken)
                 .build();
     }
 
