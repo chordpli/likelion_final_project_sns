@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.likelion.finalproject.domain.enums.AlarmType.NEW_COMMENT_ON_POST;
@@ -65,10 +66,13 @@ public class CommentService {
         service.validateMatchUsers(user, comment);
 
         commentRepository.update(request.getComment(), comment.getId());
-
+        Optional<Comment> savedComment = commentRepository.findById(id);
+        Comment check = null;
+        if (savedComment.isPresent()) {
+            check = savedComment.get();
+        }
         // comment.update(request.getComment());
-        //return CommentModifyResponse.of(commentRepository.save(comment));
-        return CommentModifyResponse.of(comment);
+        return CommentModifyResponse.of(check);
     }
 
     /**
