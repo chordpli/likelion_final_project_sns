@@ -27,12 +27,10 @@ public class AlarmService {
      * @return
      */
     @Transactional
-    public List<AlarmResponse> getMyAlarms(String userName, PageRequest pageable) {
+    public Page<AlarmResponse> getMyAlarms(String userName, PageRequest pageable) {
         User user = service.validateGetUserByUserName(userName);
 
         Page<Alarm> alarms = alarmRepository.findAlarmsByUser(user, pageable);
-        return alarms.stream()
-                .map(Alarm::toResponse)
-                .collect(Collectors.toList());
+        return alarms.map(Alarm::toResponse);
     }
 }

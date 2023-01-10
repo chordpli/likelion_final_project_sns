@@ -73,7 +73,7 @@ public class PostRestController {
     @ApiOperation("마이 피드 조회")
     @GetMapping("/my")
     public Response<Page<PostReadResponse>> getMyFeed(Authentication authentication,
-                                          @PageableDefault(size=20, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         String userName = authentication.getName();
         //PageRequest pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
         Page<PostReadResponse> myFeeds = postService.getMyAllPost(userName, pageable);

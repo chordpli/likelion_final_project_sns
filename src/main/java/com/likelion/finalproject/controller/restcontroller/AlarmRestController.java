@@ -26,7 +26,7 @@ public class AlarmRestController {
     public Response<Page<AlarmResponse>> getAlarmsByUser(Authentication authentication) {
         String userName = authentication.getName();
         PageRequest pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
-        List<AlarmResponse> myAlarms = alarmService.getMyAlarms(userName, pageable);
-        return Response.success(new PageImpl<>(myAlarms));
+        Page<AlarmResponse> myAlarms = alarmService.getMyAlarms(userName, pageable);
+        return Response.success(myAlarms);
     }
 }
