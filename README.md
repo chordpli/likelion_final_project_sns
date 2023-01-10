@@ -104,35 +104,36 @@ http://ec2-3-37-127-126.ap-northeast-2.compute.amazonaws.com:8080/
 ### [개요](https://chordplaylist.tistory.com/232)
 ### Comment
 #### [Comment 작성 및 수정 / Test](https://chordplaylist.tistory.com/231)
-- 처음, builder로 update 로직을 구현했을 때 createdAt의 정보가 null로 받아지는 현상으로 인해, 많은 고민을 하게 되었다. 다시 setter로 수정하여, createdAt의 정보를 받아올 수 있었으나, set 메서드를 사용하며 발생하는 찝찝함을 지울 수 없었다. 회고팀의 정보 공유로 @Modifying에 대해 공부하여 쿼리를 직접 날리고, 모든 정보를 이상없이 받아오는 로직을 완성했다.
+- 처음, builder로 update 로직을 구현했을 때 createdAt의 정보가 null로 받아지는 현상으로 인해, 많은 고민을 하게 되었다. 다시 setter로 수정하여, createdAt의 정보를 받아올 수 있었으나, set 메서드를 사용하며 발생하는 찝찝함을 지울 수 없었다. 회고 팀의 정보 공유로 @Modifying에 대해 공부하여 쿼리를 직접 날리고, 모든 정보를 이상 없이 받아오는 로직을 완성했다.
 #### [Comment 조회 및 삭제 / Test](https://chordplaylist.tistory.com/234)
 ### [Like 좋아요 누르기, 좋아요 개수 Count](https://chordplaylist.tistory.com/235)
-- 좋아요를 다시 눌렀을 때 예외처리가 발생하는 것이 아닌, 좋아요를 취소할 수 있도록 로직을 수정하였다.
-  - 그로인해 발생하는 중복 메서드들을 따로 분리하여 재사용성을 증가시켰다.
+- 좋아요를 다시 눌렀을 때 예외 처리가 발생하는 것이 아닌, 좋아요를 취소할 수 있도록 로직을 수정하였다.
+  - 그로 인해 발생하는 중복 메서드들을 따로 분리하여 재사용성을 증가시켰다.
 ### [Alarm 기능 개발](https://chordplaylist.tistory.com/238)
 - Comment와 Like가 작성되고, 다시 삭제되었을 때 해당 Alarm을 다시 삭제할 수 있도록 설계하였다.
-  - 회고팀과 인스타그램으로 실험해보았다.
+  - 회고 팀과 인스타그램으로 실험해 보았다.
 - Comment를 삭제했을 때 특정 Comment Alarm만 삭제하기 위해 comment Id를 매개변수로 삭제할 수 있는 메서드를 추가했다.
   - 해당 로직을 사용하지 않으면 특정 유저의 모든 Comment Alarm이 삭제된다.
 ### [JPA Soft Delete 구현](https://chordplaylist.tistory.com/240)
-- @SQLDelete의 사용법, @Where의 사용법에 대해 공부하는 시간을 갖을 수 있었다.
-- 우리가 하는 과제의 경우에는 DeletedAt을 사용하여 Delete를 할때 현재 시간이 해당 컬럼에 저장되는 방법으로 구현하였다.
+- @SQLDelete의 사용법, @Where의 사용법에 대해 공부하는 시간을 가질 수 있었다.
+- 우리가 하는 과제의 경우에는 DeletedAt을 사용하여 Delete를 할 때 현재 시간이 해당 컬럼에 저장되는 방법으로 구현하였다.
   - 타 글들을 찾아보면 boolean으로 체크하는 경우가 있는데 개인적으로 시간을 넣는 방법이 추후에 정렬하거나, 특정 데이터를 뽑아낼 때 유리할 것으로 보이기 때문에 선호한다.
 
 ## 2주차 미션 중 이슈 정리
 ### [MySQL 예약어 이슈](https://chordplaylist.tistory.com/236)
 ### [테스트 코드 생성자 이슈](https://chordplaylist.tistory.com/233)
 - 한 4-5시간은 해당 이슈로 인해 고민했던 것 같다. Controller 분리로 해결되면서 실마리를 찾았던 이슈였다.
-- 컨트롤러 필드에 존재하는 클래스들이 테스트코드에도 그대로 있어야한다는 걸.. 생각하지 못했다.
+- 컨트롤러 필드에 존재하는 클래스들이 테스트 코드에도 그대로 있어야 한다는 걸.. 생각하지 못했다.
 ### [MySQL CURRENT_TIMESTAMP 시간 이슈](https://chordplaylist.tistory.com/241)
 ### [JPA @OneToMany, cascade, orphanRemoval 이슈](https://chordplaylist.tistory.com/242)
+- 삭제만 신경 쓰면서 Modify를 잊었던 큰 실수. Casecade, orphanRemoval을 사용하기 위해 1:N N:1로 연결하였으므로, Save를 할 때 수정된 Post 내용뿐 아니라 Post에 있는 Likes와 Comments도 잊지 말고 연결시켜 주어야 했다. 
 ### [REDIS 설치](https://chordplaylist.tistory.com/243)
 - Docker의 Ubuntu에 설치하고서 Spring Redis host 주소를 local로 작성하여 에러가 계속 발생했었다.
-  - EC2의 보안그룹에서 REDIS port를 뚫은 뒤 host주소에 EC2 DNS를 입력하니 이상 없이 연결되었다.
+  - EC2의 보안 그룹에서 REDIS port를 뚫은 뒤 host주 소에 EC2 DNS를 입력하니 이상 없이 연결되었다.
 
 ## 2주차 미션 회고
 ### 리팩토링
 - comment 수정 후, DB로부터 다시 정보를 받아오기 위한 로직이 깔끔하지 않다.
 #### 전체
-- Refresh-Token을 사용해보고 싶다. 재발급 받는 로직을 프론트에서 api를 날려야하는건지, Token filter에서 해결해야하는 건지 모르겠다.
+- Refresh-Token을 사용해 보고 싶다. 재발급 받는 로직을 프론트에서 api를 날려야 하는 건지, Token filter에서 해결해야 하는 건지 모르겠다.
 - 
