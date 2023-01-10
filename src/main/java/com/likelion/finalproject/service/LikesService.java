@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import static com.likelion.finalproject.domain.enums.AlarmType.NEW_COMMENT_ON_POST;
 import static com.likelion.finalproject.domain.enums.AlarmType.NEW_LIKE_ON_POST;
 
 @Service
@@ -49,8 +51,10 @@ public class LikesService {
 
             // 좋아요 기록이 DB에 잘 저장되었다면, Alarm을 보냅니다.
             if (checkLike.isPresent()) {
-                Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
-                        .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
+                if (!Objects.equals(like.getUser().getUserName(), user.getUserName())) {
+                    Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
+                            .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
+                }
             }
             return "좋아요를 눌렀습니다";
         }
@@ -60,8 +64,10 @@ public class LikesService {
             // 이미 like를 한 적이 있는데 getDeletedAt이 NULL이라면 다시 한 번 버튼을 누른 것이므로 좋아요를 취소합니다.
             likeRepository.delete(like);
             // like를 soft delete 처리한 후 알람 기록도 삭제합니다.
-            Optional<Alarm> alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST);
-            alarm.ifPresent(alarmRepository::delete);
+            if (!Objects.equals(like.getUser().getUserName(), user.getUserName())) {
+                Optional<Alarm> alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST);
+                alarm.ifPresent(alarmRepository::delete);
+            }
             return "좋아요를 취소했습니다.";
         } else {
             // 이미 like를 한 기록이 있는데 getDeletedAt이 있다면, 좋아요를 취소한 상태에서 다시 좋아요 버튼을 누른 상황입니다.
@@ -69,8 +75,11 @@ public class LikesService {
             like.cancelDeletion();
 
             // 다시 알람을 보냅니다.
-            Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
-                    .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
+            if (!Objects.equals(like.getUser().getUserName(), user.getUserName())) {
+                Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
+                        .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
+            }
+
             return "좋아요를 눌렀습니다";
         }
     }

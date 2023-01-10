@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.likelion.finalproject.domain.enums.AlarmType.NEW_COMMENT_ON_POST;
@@ -41,7 +42,9 @@ public class CommentService {
         Post post = service.validateGetPostById(postId);
         Comment savedComment = Comment.toEntity(user, post, request);
         commentRepository.save(savedComment);
-        alarmRepository.save(Alarm.toEntity(user, post, NEW_COMMENT_ON_POST, savedComment.getId()));
+        if (!Objects.equals(savedComment.getUser().getUserName(), user.getUserName())) {
+            alarmRepository.save(Alarm.toEntity(user, post, NEW_COMMENT_ON_POST, savedComment.getId()));
+        }
         return CommentWriteResponse.of(savedComment);
     }
 
