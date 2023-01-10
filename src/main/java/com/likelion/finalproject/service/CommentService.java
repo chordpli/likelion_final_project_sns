@@ -67,11 +67,13 @@ public class CommentService {
 
         commentRepository.update(request.getComment(), comment.getId());
         Optional<Comment> savedComment = commentRepository.findById(id);
+
         Comment check = null;
         if (savedComment.isPresent()) {
             check = savedComment.get();
         }
-        // comment.update(request.getComment());
+        assert check != null;
+
         return CommentModifyResponse.of(check);
     }
 
