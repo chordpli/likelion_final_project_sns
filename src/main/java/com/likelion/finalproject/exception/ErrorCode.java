@@ -22,7 +22,8 @@ public enum ErrorCode {
     MISMATCH_COMMENT(HttpStatus.UNAUTHORIZED, "댓글이 일치하지 않습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 존재하지 않습니다."),
     NOT_LOGGED_IN(HttpStatus.CONFLICT, "로그인 상태가 아닙니다."), 
-    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다" );
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다" ),
+    REISSUING_TOKEN(HttpStatus.BAD_REQUEST,"토큰 재발급 체크 중 문제가 발생하였습니다." );
 
     private HttpStatus status;
     private String message;
