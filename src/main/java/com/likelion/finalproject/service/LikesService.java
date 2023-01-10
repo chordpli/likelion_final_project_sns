@@ -51,10 +51,7 @@ public class LikesService {
 
             // 좋아요 기록이 DB에 잘 저장되었다면, Alarm을 보냅니다.
             if (checkLike.isPresent()) {
-                if (!Objects.equals(like.getUser().getUserName(), user.getUserName())) {
-                    Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
-                            .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
-                }
+                verifyUsersWhoLikeAndRequestedAreTheSame(post, user, like);
             }
             return "좋아요를 눌렀습니다";
         }
@@ -75,12 +72,16 @@ public class LikesService {
             like.cancelDeletion();
 
             // 다시 알람을 보냅니다.
-            if (!Objects.equals(like.getUser().getUserName(), user.getUserName())) {
-                Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
-                        .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
-            }
+            verifyUsersWhoLikeAndRequestedAreTheSame(post, user, like);
 
             return "좋아요를 눌렀습니다";
+        }
+    }
+
+    private void verifyUsersWhoLikeAndRequestedAreTheSame(Post post, User user, Likes like) {
+        if (!Objects.equals(like.getUser().getUserName(), user.getUserName())) {
+            Alarm alarm = alarmRepository.findAlarmByFromUserIdAndTargetIdAndAlarmType(user.getId(), post.getId(), NEW_LIKE_ON_POST)
+                    .orElse(alarmRepository.save(Alarm.toEntity(user, post, NEW_LIKE_ON_POST)));
         }
     }
 
