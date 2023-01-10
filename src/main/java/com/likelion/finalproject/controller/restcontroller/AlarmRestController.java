@@ -3,6 +3,7 @@ package com.likelion.finalproject.controller.restcontroller;
 import com.likelion.finalproject.domain.Response;
 import com.likelion.finalproject.domain.dto.AlarmResponse;
 import com.likelion.finalproject.service.AlarmService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +23,7 @@ public class AlarmRestController {
 
     private final AlarmService alarmService;
 
+    @ApiOperation(value = "알람 내역 조회")
     @GetMapping
     public Response<Page<AlarmResponse>> getAlarmsByUser(Authentication authentication) {
         String userName = authentication.getName();
