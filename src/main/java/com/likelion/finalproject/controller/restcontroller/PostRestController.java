@@ -9,10 +9,8 @@ import com.likelion.finalproject.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,10 +72,11 @@ public class PostRestController {
     /* 마이피드 */
     @ApiOperation("마이 피드 조회")
     @GetMapping("/my")
-    public Response<Page<PostReadResponse>> getMyFeed(Authentication authentication) {
+    public Response<Page<PostReadResponse>> getMyFeed(Authentication authentication,
+                                          @PageableDefault(size=20, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         String userName = authentication.getName();
-        PageRequest pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
-        List<PostReadResponse> myFeeds = postService.getMyAllPost(userName, pageable);
-        return Response.success(new PageImpl<>(myFeeds));
+        //PageRequest pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
+        Page<PostReadResponse> myFeeds = postService.getMyAllPost(userName, pageable);
+        return Response.success(myFeeds);
     }
 }

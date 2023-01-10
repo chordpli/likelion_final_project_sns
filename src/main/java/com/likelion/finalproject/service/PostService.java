@@ -16,6 +16,7 @@ import com.likelion.finalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,11 +125,9 @@ public class PostService {
      * @return List<PostReadResponse>
      */
     @Transactional
-    public List<PostReadResponse> getMyAllPost(String userName, PageRequest pageable) {
+    public Page<PostReadResponse> getMyAllPost(String userName, Pageable pageable) {
         User user = service.validateGetUserByUserName(userName);
         Page<Post> myFeeds = postRepository.findPostsByUser(user, pageable);
-        return myFeeds.stream()
-                .map(Post::toResponse)
-                .collect(Collectors.toList());
+        return myFeeds.map(Post::toResponse);
     }
 }
