@@ -35,13 +35,17 @@ public class LikesService {
      */
     @Transactional
     public String increaseLike(Integer postId, String userName) {
+        // 좋아요를 누를 포스트
         Post post = service.validateGetPostById(postId);
+        // 좋아요를 누른 사람
         User user = service.validateGetUserByUserName(userName);
 
+        // 해당 좋아요 정보.
         Optional<Likes> optionalLike = likeRepository.findLikeByUserAndPost(user, post);
+
         Likes like;
 
-        // 좋아요 기록이 있는지 확인합니다.
+        // 좋아요 기록이 있는지 확인합니다. --> DB에 저장 되어 있는지?
         if (optionalLike.isPresent()) {
             like = optionalLike.get();
         } else {
