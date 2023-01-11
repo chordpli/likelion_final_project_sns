@@ -31,8 +31,6 @@ public class UserService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private long expireTimeMs = 1000 * 60 * 60;
-
     /**
      * request에 담긴 가입 정보로 회원가입을 진행하는 메서드
      *
@@ -85,6 +83,8 @@ public class UserService {
 
         // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
         String refreshToken = (String)redisDao.getValues("RT:" + UserName);
+        log.info("refreshToken = {}", refreshToken);
+
         // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if(ObjectUtils.isEmpty(refreshToken)) {
             throw new SNSAppException(ErrorCode.INVALID_REQUEST, INVALID_REQUEST.getMessage());
