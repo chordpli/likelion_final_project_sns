@@ -5,6 +5,8 @@ import com.likelion.finalproject.domain.entity.Alarm;
 import com.likelion.finalproject.domain.entity.Comment;
 import com.likelion.finalproject.domain.entity.Post;
 import com.likelion.finalproject.domain.entity.User;
+import com.likelion.finalproject.exception.ErrorCode;
+import com.likelion.finalproject.exception.SNSAppException;
 import com.likelion.finalproject.repository.AlarmRepository;
 import com.likelion.finalproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,15 +68,19 @@ public class CommentService {
         service.validateMatchUsers(user, comment);
 
         commentRepository.update(request.getComment(), comment.getId());
-        Optional<Comment> savedComment = commentRepository.findById(id);
+        Comment savedComment = commentRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new SNSAppException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage());
+                }
+        );
 
-        Comment check = null;
+        /*Comment check = null;
         if (savedComment.isPresent()) {
             check = savedComment.get();
         }
-        assert check != null;
+        assert check != null;*/
 
-        return CommentModifyResponse.of(check);
+        return CommentModifyResponse.of(savedComment);
     }
 
     /**
